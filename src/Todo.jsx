@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+// import dotenv from "dotenv";
 
 import "./styles.css";
 import { InputTodo } from "./components/InputTodo";
@@ -7,6 +8,8 @@ import { IncompleteTodos } from "./components/IncompleteTodos";
 import { TodoDetail } from "./components/TodoDetail";
 import { CompleteTodos } from "./components/CompleteTodos";
 import { Login } from "./components/Login";
+
+// dotenv.config();
 
 export const Todo = () => {
   const [todoText, setTodoText] = useState("");
@@ -25,7 +28,7 @@ export const Todo = () => {
   };
 
   async function getIndex() {
-    const res = await fetch("http://localhost:8082/todos", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
       cache: "default",
       credentials: "include",
       redirect: "follow",
@@ -37,7 +40,7 @@ export const Todo = () => {
   }
 
   async function onClickShow(id) {
-    const res = await fetch(`http://localhost:8082/todos/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
       cache: "default",
       credentials: "include",
       redirect: "follow",
@@ -78,7 +81,7 @@ export const Todo = () => {
   async function loginByAdmin() {
     const f1 = document.getElementById("f1");
     const loginForm = new FormData(f1);
-    const res = await fetch("http://localhost:8082/authentication", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/authentication`, {
       method: "POST",
       cache: "default",
       body: loginForm,
@@ -100,7 +103,7 @@ export const Todo = () => {
   }
 
   async function getdata() {
-    const res = await fetch("http://localhost:8082/todos", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
       cache: "default",
       credentials: "include",
       redirect: "follow",
@@ -113,7 +116,7 @@ export const Todo = () => {
   }
 
   async function logout() {
-    const res = await fetch("http://localhost:8082/logout", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
       method: "POST",
       cache: "default",
       credentials: "include",
@@ -137,7 +140,7 @@ export const Todo = () => {
       <button onClick={logout}>ログアウト</button>
       <br></br>
       <button onClick={getIndex}>一覧表示</button>
-      <a href="http://localhost:8082/todos/1">Springのサーバーへ</a>
+      <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>Springのサーバーへ</a>
 
       {/* <InputTodo
         todoText={todoText}
