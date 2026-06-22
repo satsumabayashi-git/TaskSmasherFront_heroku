@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: nginx -g "deamon off;"
+  web: nginx -g "daemon off;"
