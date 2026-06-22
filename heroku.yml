@@ -3,8 +3,9 @@ build:
     web: Dockerfile
 run:
   # web: nginx -g "daemon off;"
-  web: nginx -g "daemon off;" --env "PORT_N=$PORT"
+  # web: nginx -g "daemon off;" -e PORT_N=$PORT
   # web: /bin/sh -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
-  # web: /bin/sh -c "envsubst '$$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+  # web: /bin/sh -c "envsubst '$$PORT_N' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
   # web: envsubst "$$PORT" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g "daemon off;"
   # web: /bin/sh -c "envsubst '$$PORT' < /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+  web: /bin/sh -c "export PORT_N=$PORT && envsubst '$$PORT_N' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
