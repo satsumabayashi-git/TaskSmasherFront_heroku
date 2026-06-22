@@ -13,7 +13,8 @@ FROM nginx:1.25-alpine AS runner
 RUN rm /etc/nginx/conf.d/default.conf
 # RUN rm /etc/nginx/nginx.conf
 # カスタム設定ファイルをコンテナ内にコピー
-COPY default.conf /etc/nginx/conf.d
+# COPY default.conf /etc/nginx/conf.d
+COPY default.conf.template /etc/nginx/conf.d
 # COPY nginx.conf /etc/nginx
 # Build Stageで作った成果物（/app/build）だけをコピー
 # ソースコードやnode_modulesはここには含まれない
