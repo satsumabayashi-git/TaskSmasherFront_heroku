@@ -19,6 +19,7 @@ COPY default.conf.template /etc/nginx/conf.d
 # Build Stageで作った成果物（/app/build）だけをコピー
 # ソースコードやnode_modulesはここには含まれない
 COPY --from=builder /app/dist /usr/share/nginx/html
+RUN envsubst '$$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
