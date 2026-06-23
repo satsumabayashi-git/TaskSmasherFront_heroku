@@ -14,10 +14,11 @@ FROM nginx:1.25-alpine AS runner
 RUN rm /etc/nginx/conf.d/default.conf
 # カスタム設定ファイルをコンテナ内にコピー
 # COPY default.conf /etc/nginx/conf.d
+#本番
 COPY nginx/default.conf.template /etc/nginx/conf.d
-# デフォルトで /etc/nginx/templates/*.template の設定ファイルに対して envsubst を実行して /etc/nginx/conf.d/*.conf へ出力するようになっている
+
+# デフォルトで /etc/nginx/templates/*.template の設定ファイルに対して envsubst を実行して /etc/nginx/conf.d/*.conf へ出力するようになっている←本番では無理
 # COPY nginx/default.conf.template /etc/nginx/templates/
-# COPY nginx/default.conf.template /etc/nginx/
 
 # RUN rm /etc/nginx/nginx.conf
 # COPY nginx/nginx.conf /etc/nginx
