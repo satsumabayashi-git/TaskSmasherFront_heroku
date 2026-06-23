@@ -3,11 +3,15 @@ build:
     web: Dockerfile
 run:
   # web: nginx -g "daemon off;"
-  # web: /bin/sh -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
-  # web: /bin/sh -c "envsubst '$$PORT_N' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  # 変数を指定せずenvsubstを使う(default.conf.templateにはPORT以外の変数を入れない)
+  web: /bin/sh -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  # 変数PORTを指定してenvsubstを使う→失敗
   # web: envsubst "$$PORT" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g "daemon off;"
-  # web: /bin/sh -c "envsubst '$$PORT' < /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+  # PORTを迂回するため別の変数を指定→失敗
   # web: /bin/sh -c "export PORT_N=$PORT && envsubst '$$PORT_N' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 
-  web: /bin/sh -c "cp /etc/nginx/default.conf.template /etc/nginx/templates && nginx -g 'daemon off;'"
+  # Docker:nginxのnginx/templates機能を利用する→失敗
+  # web: /bin/sh -c "cp /etc/nginx/default.conf.template /etc/nginx/templates && nginx -g 'daemon off;'"
   
