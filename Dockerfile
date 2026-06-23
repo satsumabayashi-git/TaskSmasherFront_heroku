@@ -9,7 +9,7 @@ RUN npm run build
 
 # 実行ステージ
 FROM nginx:1.25-alpine AS runner
-# ENV PORT=${PORT}
+# ENV PORT=80
 # デフォルトの設定ファイルを削除
 RUN rm /etc/nginx/conf.d/default.conf
 # カスタム設定ファイルをコンテナ内にコピー
