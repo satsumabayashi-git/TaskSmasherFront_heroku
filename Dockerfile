@@ -11,11 +11,15 @@ RUN npm run build
 FROM nginx:1.25-alpine AS runner
 # デフォルトの設定ファイルを削除
 RUN rm /etc/nginx/conf.d/default.conf
-# RUN rm /etc/nginx/nginx.conf
 # カスタム設定ファイルをコンテナ内にコピー
 # COPY default.conf /etc/nginx/conf.d
-COPY nginx/default.conf.template /etc/nginx/conf.d
+# COPY nginx/default.conf.template /etc/nginx/conf.d
+# デフォルトで /etc/nginx/templates/*.template の設定ファイルに対して envsubst を実行して /etc/nginx/conf.d/*.conf へ出力するようになっている
+COPY nginx/default.conf.template /etc/nginx/templates/
+
+# RUN rm /etc/nginx/nginx.conf
 # COPY nginx/nginx.conf /etc/nginx
+
 # Build Stageで作った成果物（/app/build）だけをコピー
 # ソースコードやnode_modulesはここには含まれない
 COPY --from=builder /app/dist /usr/share/nginx/html
