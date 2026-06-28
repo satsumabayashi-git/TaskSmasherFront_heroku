@@ -1,20 +1,22 @@
 export const IncompleteTodos = (props) => {
-  const { Todos, Show } = props;
+  const { Todos, onClickEdit, onClickDelete, onClickComplete } = props;
   return (
     <div className="incomplete-area">
       <p className="title">未完了のTODO</p>
       <ul>
-        {Todos.map((todo) => (
-          <li key={todo.id}>
-            <div className="list-row">
-              <p className="todo-item">{todo.todo}</p>
-              {/* <button onClick={() => onClickComplete(index)}>完了</button> */}
-              <button onClick={() => Show(todo.id)}>詳細</button>
-              <button>完了</button>
-              <button>削除</button>
-            </div>
-          </li>
-        ))}
+        {Todos.map((todo) => {
+          return (
+            <li key={todo.id}>
+              <div className="list-row">
+                <p className="todo-item">{todo.todo}</p>
+                {/* <button onClick={() => Show(todo.id)}>詳細</button> */}
+                <button onClick={() => onClickEdit(todo.id)}>詳細</button>
+                <button onClick={() => onClickComplete(todo.id)}>完了</button>
+                <button onClick={() => onClickDelete(todo.id)}>削除</button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
 

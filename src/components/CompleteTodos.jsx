@@ -1,15 +1,16 @@
 export const CompleteTodos = (props) => {
-  const { onClickBack, Todos } = props;
+  const { Todos, onClickDelete, onClickBack } = props;
   return (
     <div className="complete-area">
-      <p className="title">完了のTODO</p>
+      <p className="title">完了のTODO(ゴミ箱)</p>
       <ul>
-        {Todos.map((todo, index) => {
+        {Todos.map((todo) => {
           return (
-            <li key={todo}>
+            <li key={todo.id}>
               <div className="list-row">
-                <p className="todo-item">{todo}</p>
-                <button onClick={() => onClickBack(index)}>戻す</button>
+                <p className="todo-item">{todo.todo}</p>
+                <button onClick={() => onClickBack(todo.id)}>戻す</button>
+                <button onClick={() => onClickDelete(todo.id)}>削除</button>
               </div>
             </li>
           );

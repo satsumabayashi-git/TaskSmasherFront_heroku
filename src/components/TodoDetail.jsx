@@ -1,5 +1,5 @@
 export const TodoDetail = (props) => {
-  const { Todo } = props;
+  const { Todo, Edit, onClickDelete } = props;
   return (
     <div className="incomplete-area">
       <p className="title">TODO詳細</p>
@@ -37,9 +37,15 @@ export const TodoDetail = (props) => {
         </table>
       </div>
       <div style={{ textAlign: "center" }}>
-        <button>編集</button>
+        {/* <button onClick={Edit(Todo.id)}>編集</button> */}
         <button>完了</button>
-        <button>削除</button>
+        <button
+          onClick={() => {
+            onClickDelete(Todo.id);
+          }}
+        >
+          削除
+        </button>
       </div>
     </div>
   );

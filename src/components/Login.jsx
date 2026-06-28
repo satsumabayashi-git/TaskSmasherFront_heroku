@@ -32,7 +32,7 @@ export const Login = (props) => {
         // th:action="http://localhost:8080/authentication"
         // method="POST"
         // th:object="${loginForm}"
-        id="f1"
+        id="loginForm"
       >
         <div>
           <label htmlFor="usernameInput">username</label>
