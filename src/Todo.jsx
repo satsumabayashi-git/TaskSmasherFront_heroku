@@ -47,7 +47,7 @@ export const Todo = () => {
   const APIAccsess = (res, func) => {
     if (res.ok) {
       func();
-    } else if (res.fobbidon) {
+    } else if (res.fobidden) {
       setFrashMessage({
         errorMessage: "アクセスは許可されませんでした。",
       });
