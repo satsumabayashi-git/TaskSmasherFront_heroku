@@ -17,7 +17,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/default.conf.template /etc/nginx/conf.d
 # 開発設定
 # デフォルトで /etc/nginx/templates/*.template の設定ファイルに対して envsubst を実行して /etc/nginx/conf.d/*.conf へ出力するようになっている←本番では無理
-# ENV PORT=80
+# ENV PORT=5173
 # COPY nginx/default.conf.template /etc/nginx/templates/
 
 # Build Stageで作った成果物（/app/build）だけをコピー
