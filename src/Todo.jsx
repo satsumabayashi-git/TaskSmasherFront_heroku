@@ -63,6 +63,8 @@ export const Todo = () => {
   async function getIndex() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
       credentials: "include",
+      cache: "default",
+      redirect: "follow",
     });
     const todos = await res.json();
     console.log(todos);
@@ -75,6 +77,8 @@ export const Todo = () => {
       `${import.meta.env.VITE_API_URL}/todos/incomplete`,
       {
         credentials: "include",
+        cache: "default",
+        redirect: "follow",
       }
     );
     const todos = await res.json();
@@ -86,6 +90,8 @@ export const Todo = () => {
   async function getCompleteToDo() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/complete`, {
       credentials: "include",
+      cache: "default",
+      redirect: "follow",
     });
     async function func() {
       const todos = await res.json();
@@ -113,6 +119,8 @@ export const Todo = () => {
     // const todo = await onClickShow(id);
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
       credentials: "include",
+      cache: "default",
+      redirect: "follow",
     });
     async function func() {
       const todo = await res.json();
@@ -148,6 +156,8 @@ export const Todo = () => {
       method: "POST",
       body: toDoForm,
       credentials: "include",
+      cache: "default",
+      redirect: "follow",
       headers: {
         "X-CSRF-TOKEN": csrf,
       },
@@ -200,6 +210,8 @@ export const Todo = () => {
       {
         method: "POST",
         credentials: "include",
+        cache: "default",
+        redirect: "follow",
         headers: {
           "X-CSRF-TOKEN": csrf,
         },
@@ -226,6 +238,8 @@ export const Todo = () => {
       {
         method: "POST",
         credentials: "include",
+        cache: "default",
+        redirect: "follow",
         headers: {
           "X-CSRF-TOKEN": csrf,
         },
@@ -249,6 +263,8 @@ export const Todo = () => {
       {
         method: "POST",
         credentials: "include",
+        cache: "default",
+        redirect: "follow",
         headers: {
           "X-CSRF-TOKEN": csrf,
         },
@@ -270,6 +286,8 @@ export const Todo = () => {
       method: "POST",
       body: loginForm,
       credentials: "include",
+      cache: "default",
+      redirect: "follow",
     });
     async function func() {
       const message = await res.json();
@@ -297,6 +315,8 @@ export const Todo = () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
       method: "POST",
       credentials: "include",
+      cache: "default",
+      redirect: "follow",
     });
     const message = await res.json();
     console.log(message.result);
