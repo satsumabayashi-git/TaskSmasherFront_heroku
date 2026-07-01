@@ -365,8 +365,15 @@ export const Todo = () => {
 
   async function getdata() {
     // Cookie 全体を取得（"key=value; key2=value2" の形式）
-    const allCookies = document.cookie;
-    console.log(allCookies);
+    // const allCookies = document.cookie;
+    // console.log(allCookies);
+
+    var r = document.cookie.split(";");
+    r.forEach(function (value) {
+      //cookie名と値に分ける
+      var content = value.split("=");
+      console.log(content[1]);
+    });
 
     // 特定のキー（例: token）を取得する関数
     // function getCookie(name) {
