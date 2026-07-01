@@ -364,9 +364,22 @@ export const Todo = () => {
   }
 
   async function getdata() {
-    const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
-    console.log(csrf);
+    // Cookie 全体を取得（"key=value; key2=value2" の形式）
+    const allCookies = document.cookie;
+    console.log(allCookies);
+
+    // 特定のキー（例: token）を取得する関数
+    // function getCookie(name) {
+    //   const value = `; ${document.cookie}`;
+    //   const parts = value.split(`; ${name}=`);
+    //   if (parts.length === 2) {
+    //     return parts.pop().split(";").shift();
+    //   }
+    //   return null; // 見つからない場合
+    // }
+    // const cookies = cookie.parse(document.cookie);
+    // const csrf = cookies._ctkn;
+    // console.log(csrf);
   }
 
   return (
