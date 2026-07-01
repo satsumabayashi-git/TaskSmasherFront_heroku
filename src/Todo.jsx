@@ -365,7 +365,7 @@ export const Todo = () => {
 
   async function getdata() {
     const cookies = cookie.parse(document.cookie);
-    console.log(cookies);
+    console.log(document.cookie);
   }
 
   return (
