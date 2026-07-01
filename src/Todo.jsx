@@ -44,7 +44,7 @@ export const Todo = () => {
       detail: event.target.value,
     });
 
-  const APIAccsess = (res, func) => {
+  const APIAccess = (res, func) => {
     if (res.ok) {
       func();
     } else if (res.fobidden) {
@@ -99,7 +99,7 @@ export const Todo = () => {
       setCompleteTodos(todos);
       return todos;
     }
-    APIAccsess(res, func);
+    APIAccess(res, func);
   }
 
   // async function onClickShow(id) {
@@ -112,7 +112,7 @@ export const Todo = () => {
   //     setTodoDetail(todo);
   //     return todo;
   //   }
-  //   APIAccsess(res, func);
+  //   APIAccess(res, func);
   // }
 
   async function onClickEdit(id) {
@@ -132,9 +132,10 @@ export const Todo = () => {
         todo: todo.todo,
         detail: todo.detail,
       });
+      setFrashMessage({});
       return todo;
     }
-    APIAccsess(res, func);
+    APIAccess(res, func);
   }
 
   const onClickNew = () => {
@@ -199,36 +200,8 @@ export const Todo = () => {
         });
       setTodoDetail({});
     }
-    APIAccsess(res, func);
+    APIAccess(res, func);
   }
-
-  // async function onClickDelete(id) {
-  //   const cookies = cookie.parse(document.cookie);
-  //   const csrf = cookies._ctkn;
-  //   const res = await fetch(
-  //     `${import.meta.env.VITE_API_URL}/todos/delete/${id}`,
-  //     {
-  //       method: "POST",
-  //       credentials: "include",
-  //       cache: "default",
-  //       redirect: "follow",
-  //       headers: {
-  //         "X-CSRF-TOKEN": csrf,
-  //       },
-  //     }
-  //   );
-  //   async function func() {
-  //     const result = await res.json();
-  //     console.log(result);
-  //     // getIndex();
-  //     getIncompleteToDo();
-  //     getCompleteToDo();
-  //     setFrashMessage({
-  //       message: "ToDoを削除しました",
-  //     });
-  //   }
-  //   APIAccsess(res, func);
-  // }
 
   async function onClickDelete(id) {
     const cookies = cookie.parse(document.cookie);
@@ -245,14 +218,17 @@ export const Todo = () => {
         },
       }
     );
-    const result = await res.json();
-    console.log(result);
-    // getIndex();
-    getIncompleteToDo();
-    getCompleteToDo();
-    setFrashMessage({
-      message: "ToDoを削除しました",
-    });
+    async function func() {
+      const result = await res.json();
+      console.log(result);
+      // getIndex();
+      getIncompleteToDo();
+      getCompleteToDo();
+      setFrashMessage({
+        message: "ToDoを削除しました",
+      });
+    }
+    APIAccess(res, func);
   }
 
   async function onClickComplete(id) {
@@ -277,7 +253,7 @@ export const Todo = () => {
       getIncompleteToDo();
       getCompleteToDo();
     }
-    APIAccsess(res, func);
+    APIAccess(res, func);
   }
 
   async function onClickBack(id) {
@@ -302,7 +278,7 @@ export const Todo = () => {
       getIncompleteToDo();
       getCompleteToDo();
     }
-    APIAccsess(res, func);
+    APIAccess(res, func);
   }
 
   async function loginRequest() {
@@ -333,7 +309,7 @@ export const Todo = () => {
         // alert("メールアドレスまたはパスワードが正しくありません。");
       }
     }
-    APIAccsess(res, func);
+    APIAccess(res, func);
   }
 
   async function logout() {
