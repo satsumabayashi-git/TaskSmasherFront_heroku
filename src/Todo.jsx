@@ -365,7 +365,8 @@ export const Todo = () => {
 
   async function getdata() {
     const cookies = cookie.parse(document.cookie);
-    console.log(document.cookie);
+    const csrf = cookies._ctkn;
+    console.log(csrf);
   }
 
   return (
