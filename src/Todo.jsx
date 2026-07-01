@@ -363,8 +363,10 @@ export const Todo = () => {
     }
   }
 
-  // async function getdata() {
-  // }
+  async function getdata() {
+    const cookies = cookie.parse(document.cookie);
+    console.log(cookies);
+  }
 
   return (
     <>
@@ -374,6 +376,7 @@ export const Todo = () => {
       <button onClick={logout} disabled={!isLogin}>
         ログアウト
       </button>
+      <button onClick={getdata}>getdata</button>
       <br></br>
       <button onClick={getIndex}>一覧表示</button>
       <button onClick={getIncompleteToDo}>未完了一覧</button>
