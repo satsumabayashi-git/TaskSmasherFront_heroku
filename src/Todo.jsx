@@ -204,37 +204,9 @@ export const Todo = () => {
     APIAccess(res, func);
   }
 
-  // async function onClickDelete(id) {
-  //   const cookies = cookie.parse(document.cookie);
-  //   const csrf = cookies._ctkn;
-  //   const res = await fetch(
-  //     `${import.meta.env.VITE_API_URL}/todos/delete/${id}`,
-  //     {
-  //       method: "POST",
-  //       credentials: "include",
-  //       cache: "default",
-  //       redirect: "follow",
-  //       headers: {
-  //         "X-CSRF-TOKEN": csrf,
-  //       },
-  //     }
-  //   );
-  //   async function func() {
-  //     const result = await res.json();
-  //     console.log(result);
-  //     // getIndex();
-  //     getIncompleteToDo();
-  //     getCompleteToDo();
-  //     setFrashMessage({
-  //       message: "ToDoを削除しました",
-  //     });
-  //   }
-  //   APIAccess(res, func);
-  // }
-
   async function onClickDelete(id) {
     const cookies = cookie.parse(document.cookie);
-    const csrf = cookies.XSRF - TOKEN;
+    const csrf = cookies._ctkn;
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/todos/delete/${id}`,
       {
@@ -243,7 +215,7 @@ export const Todo = () => {
         cache: "default",
         redirect: "follow",
         headers: {
-          "X-XSRF-TOKEN": csrf,
+          "X-CSRF-TOKEN": csrf,
         },
       }
     );
@@ -262,7 +234,7 @@ export const Todo = () => {
 
   async function onClickComplete(id) {
     const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctknsgaege;
+    const csrf = cookies._ctkn;
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/todos/complete/${id}`,
       {
