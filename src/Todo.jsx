@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 // import dotenv from "dotenv";
 import cookie from "cookie";
+import request from "superagent";
 
 import "./styles.css";
 import { InputTodo } from "./components/InputTodo";
@@ -365,8 +366,9 @@ export const Todo = () => {
 
   async function getdata() {
     // Cookie 全体を取得（"key=value; key2=value2" の形式）
-    // const allCookies = document.cookie;
-    // console.log(allCookies);
+    const cookies = document.cookie;
+    console.log(cookies);
+    console.log(cookies._ctkn);
 
     var r = document.cookie.split(";");
     r.forEach(function (value) {
