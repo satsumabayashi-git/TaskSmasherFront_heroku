@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 // import dotenv from "dotenv";
 import cookie from "cookie";
-import request from "superagent";
+// import request from "superagent";
 
 import "./styles.css";
 import { InputTodo } from "./components/InputTodo";
