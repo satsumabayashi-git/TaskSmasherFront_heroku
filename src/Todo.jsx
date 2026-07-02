@@ -262,7 +262,7 @@ export const Todo = () => {
 
   async function onClickComplete(id) {
     const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
+    const csrf = cookies._ctknsgaege;
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/todos/complete/${id}`,
       {
