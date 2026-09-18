@@ -68,3 +68,12 @@ button:hover {
 .todo-item {
   margin: 6px;
 }
+
+canvas {
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#screenshotArea{
+  background-color: #c9dede;
+}

@@ -27,6 +27,7 @@ export const Todo = () => {
   const [completeTodos, setCompleteTodos] = useState([]);
   const [frashMessage, setFrashMessage] = useState({});
   const [formErrorMessage, setFormErrorMessage] = useState({});
+  const [isDeletingCompleteTodos, setIsDeletingCompleteTodos] = useState(false);
 
   // const isMaxLimitIncompleteTodos = incompleteTodos.length >= 5;
 
@@ -336,6 +337,74 @@ export const Todo = () => {
     }
   }
 
+  const onClickAllDelete = () => {
+    const processor = {};
+    const video = document.getElementById("deleteAnimation");
+    processor.doLoad = function doLoad() {
+      this.video = video;
+      // this.c1 = document.getElementById("c1");
+      // this.ctx1 = this.c1.getContext("2d");
+      this.c2 = document.getElementById("processedAnimation");
+      this.ctx2 = this.c2.getContext("2d");
+
+      video.addEventListener(
+        "play",
+        () => {
+          this.width = 400;
+          this.height = 300;
+          this.timerCallback();
+        },
+        false
+      );
+    };
+    processor.timerCallback = function timerCallback() {
+      if (this.video.paused || this.video.ended) {
+        return;
+      }
+      this.computeFrame();
+      setTimeout(() => {
+        this.timerCallback();
+      }, 0);
+    };
+    processor.computeFrame = function () {
+      this.ctx2.drawImage(this.video, 0, 0, this.width, this.height);
+      // const frame = this.ctx2.getImageData(0, 0, this.width, this.height);
+      const frame = this.ctx2.getImageData(0, 0, 400, 300);
+      const data = frame.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const red = data[i + 0];
+        const green = data[i + 1];
+        const blue = data[i + 2];
+        if (red < 5 && green < 5 && blue < 5) {
+          data[i + 3] = 0;
+        }
+      }
+      this.ctx2.putImageData(frame, 0, 0);
+    };
+
+    processor.doLoad();
+    processor.timerCallback();
+    processor.computeFrame();
+    html2canvas(document.getElementById("screenshotArea")).then((canvas) => {
+      const data = canvas.toDataURL("image/png");
+      document.getElementById(
+        "processedAnimation"
+      ).style.backgroundImage = `url(${data})`;
+    });
+
+    // onClickDelete("all").then(() => {});
+    setIsDeletingCompleteTodos(true);
+    document.getElementById("deleteAnimation").play();
+    video.addEventListener(
+      "ended",
+      () => {
+        setIsDeletingCompleteTodos(false);
+      },
+      false
+    );
+  };
+
   async function getdata() {
     // Cookie 全体を取得（"key=value; key2=value2" の形式）
     const cookies = document.cookie;
@@ -406,6 +475,8 @@ export const Todo = () => {
         Todos={completeTodos}
         onClickDelete={onClickDelete}
         onClickBack={onClickBack}
+        onClickAllDelete={onClickAllDelete}
+        isDeletingCompleteTodos={isDeletingCompleteTodos}
       />
     </>
   );
