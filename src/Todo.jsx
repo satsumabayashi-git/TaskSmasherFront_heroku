@@ -446,7 +446,11 @@ export const Todo = () => {
       <button onClick={getIncompleteToDo}>未完了一覧</button>
       <button onClick={getCompleteToDo}>完了一覧</button>
       <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>Springのサーバーへ</a>
-      <button onClick={onClickNew}>新規作成</button>
+      <br></br>
+      <div className="menu">
+        <button onClick={onClickNew}>新規作成</button>
+        <button onClick={logout}>ログアウト</button>
+      </div>
       <InputTodo
         message={formErrorMessage}
         inputTodo={inputTodo}

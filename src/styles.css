@@ -1,3 +1,9 @@
+* {
+  box-sizing: border-box;
+  /* margin: 0;
+  padding: 0; */
+}
+
 body {
   font-family: sans-serif;
   color: #666;
@@ -8,7 +14,12 @@ body {
 
 input {
   border-radius: 8px;
-  /* border: none; */
+  padding: 5px 16px;
+  margin: 5px 10px;
+}
+
+textarea {
+  border-radius: 8px;
   padding: 5px 16px;
   margin: 5px 10px;
 }
@@ -26,29 +37,53 @@ button:hover {
   cursor: pointer;
 }
 
-/* .input-area {
+.menu {
+  width: 420px;
+  display: flex;
+  justify-content: end;
+  margin: 8px auto;
+}
+
+.login-area {
+  border: 2px solid #aacfd0;
+  border-radius: 8px;
+  width: 420px;
+  padding: 16px;
+  margin: 8px auto;
+}
+
+th {
+  padding: 0 16px;
+  width: 100px;
+}
+
+td {
+  padding: 0 8px;
+  width: 200px;
+}
+
+.input-area {
   background-color: #c6e5d9;
-  width: 400px;
-  height: 30px;
-  padding: 8px;
+  width: 420px;
+  padding: 16px;
   margin: 8px auto;
   border-radius: 8px;
-} */
+}
 
 .incomplete-area {
   border: 2px solid #aacfd0;
-  width: 400px;
+  width: 420px;
   min-height: 200px;
-  padding: 8px;
+  padding: 16px;
   margin: 8px auto;
   border-radius: 8px;
 }
 
 .complete-area {
   border: 2px solid #aacfd0;
-  width: 400px;
+  width: 420px;
   min-height: 200px;
-  padding: 8px;
+  padding: 16px;
   margin: 8px auto;
   border-radius: 8px;
   background-color: #c9dede;
@@ -65,8 +100,36 @@ button:hover {
   align-items: center;
 }
 
+.list-title1 {
+  width: 170px;
+}
+
+.list-title2 {
+  width: 225px;
+}
+
+.list-button {
+  display:flex;
+}
+
 .todo-item {
   margin: 6px;
+}
+
+.danger-button {
+  display: block;
+  margin: 0 auto;
+  width: 160px;
+  background-color: #79a8a9;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.danger-button:hover {
+  background-color: red;
+  color: #fff;
+  cursor: pointer;
 }
 
 canvas {
@@ -74,6 +137,6 @@ canvas {
   background-repeat: no-repeat;
 }
 
-#screenshotArea{
+#screenshotArea {
   background-color: #c9dede;
 }

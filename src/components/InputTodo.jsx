@@ -1,23 +1,17 @@
 const style = {
-  backgroundColor: "#c6e5d9",
-  width: "400px",
-  height: "600px",
-  padding: "8px",
-  margin: "8px auto",
-  borderRadius: "8px",
 };
 
 export const InputTodo = (props) => {
   const { message, inputTodo, onChangeTitle, onChangeDetail, onClick } = props;
   return (
-    <div style={style}>
+    <div className="input-area">
       <h2>{inputTodo.isNew ? "新規TODO" : "TODO編集"}</h2>
 
       <form id="toDoForm">
-        {/* <input type="hidden" name="isNew" value={isNew} /> */}
-        <input name="isNew" value={inputTodo.isNew} />
-        {/* <input type="hidden" name="id" value={todoId} /> */}
-        <input name="id" value={inputTodo.id} />
+        <input type="hidden" name="isNew" value={inputTodo.isNew} />
+        {/* <input name="isNew" value={inputTodo.isNew} /> */}
+        <input type="hidden" name="id" value={inputTodo.id} />
+        {/* <input name="id" value={inputTodo.id} /> */}
         <input
           type="text"
           name="todo"
@@ -30,7 +24,7 @@ export const InputTodo = (props) => {
         <br></br>
         <textarea
           rows="20"
-          cols="50"
+          cols="45"
           name="detail"
           value={inputTodo.detail}
           onChange={onChangeDetail}
@@ -45,19 +39,3 @@ export const InputTodo = (props) => {
     </div>
   );
 };
-
-{
-  /* <input
-        // disabled={disabled}
-        placeholder="タイトル"
-        value={todoTitle}
-        onChange={onChange}
-      />
-      <input
-        // disabled={disabled}
-        placeholder="詳細"
-        value={todoText}
-        onChange={onChange}
-      />
-      <button onClick={onClick}>追加</button> */
-}

@@ -1,7 +1,7 @@
 import animation from "../media/nc274685_爆発CGアニメーション_その５.mp4";
 
 const style = {
-  display: "none",
+  // display: "none",
 };
 
 export const CompleteTodos = (props) => {
@@ -14,27 +14,31 @@ export const CompleteTodos = (props) => {
   } = props;
   return (
     <div className="complete-area">
-      <p className="title">完了のTODO(ゴミ箱)</p>
-      {!isDeletingCompleteTodos && <p style={{ color: "red" }}>ON</p>}
+      <h2 className="title">完了のTODO(ゴミ箱)</h2>
+      {!isDeletingCompleteTodos && <p style={{ color: "red" }}>削除前</p>}
       <div id="screenshotArea" style={{ display: isDeletingCompleteTodos ? "none" : "block" }}>
         <ul>
           {Todos.map((todo) => {
             return (
               <li key={todo.id}>
                 <div className="list-row">
-                  <p className="todo-item">{todo.todo}</p>
-                  <button
-                    disabled={isDeletingCompleteTodos}
-                    onClick={() => onClickBack(todo.id)}
-                  >
-                    戻す
-                  </button>
-                  <button
-                    disabled={isDeletingCompleteTodos}
-                    onClick={() => onClickDelete(todo.id)}
-                  >
-                    削除
-                  </button>
+                  <div className="list-title2">
+                    <p className="todo-item">{todo.todo}</p>
+                  </div>
+                  <div className="list-button">
+                    <button
+                      disabled={isDeletingCompleteTodos}
+                      onClick={() => onClickBack(todo.id)}
+                    >
+                      戻す
+                    </button>
+                    <button
+                      disabled={isDeletingCompleteTodos}
+                      onClick={() => onClickDelete(todo.id)}
+                    >
+                      削除
+                    </button>
+                  </div>
                 </div>
               </li>
             );
@@ -43,14 +47,15 @@ export const CompleteTodos = (props) => {
       </div>
 
       <div style={{ display: isDeletingCompleteTodos ? "block" : "none" }}>
-        {isDeletingCompleteTodos && <p style={{ color: "red" }}>ON</p>}
+        {isDeletingCompleteTodos && <p style={{ color: "red" }}>削除中</p>}
         <canvas id="processedAnimation" width="400"></canvas>
       </div>
       <button
         disabled={isDeletingCompleteTodos}
         onClick={() => onClickAllDelete()}
+        className="danger-button"
       >
-        爆破
+        すべて削除（爆破）
       </button>
       
       <video id="deleteAnimation" src={animation} width="0" height="0">

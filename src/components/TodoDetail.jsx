@@ -2,20 +2,13 @@ export const TodoDetail = (props) => {
   const { Todo, Edit, onClickDelete } = props;
   return (
     <div className="incomplete-area">
-      <p className="title">TODO詳細</p>
-      <div
-        style={{
-          color: "red",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <table border="1">
+      <h2 className="title">TODO詳細</h2>
+      <div>
+        <table>
           <tbody>
             <tr>
-              <th>ID</th>
-              <td>{Todo.id}</td>
+              {/* <th>ID</th>
+              <td>{Todo.id}</td> */}
             </tr>
             <tr>
               <th>タイトル</th>
@@ -36,8 +29,15 @@ export const TodoDetail = (props) => {
           </tbody>
         </table>
       </div>
+      <br></br>
       <div style={{ textAlign: "center" }}>
-        {/* <button onClick={Edit(Todo.id)}>編集</button> */}
+        <button
+          onClick={() => {
+            Edit(Todo.id);
+          }}
+        >
+          編集
+        </button>
         <button>完了</button>
         <button
           onClick={() => {
