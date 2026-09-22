@@ -208,18 +208,25 @@ export const Todo = () => {
   async function onClickDelete(id) {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/todos/delete/${id}`,
-      {
-        method: "POST",
-        credentials: "include",
-        cache: "default",
-        redirect: "follow",
-        headers: {
-          "X-CSRF-TOKEN": csrf,
-        },
-      }
-    );
+    let url;
+    switch (id) {
+      case "all":
+        url = `${import.meta.env.VITE_API_URL}/todos/all-delete`;
+        break;
+      default:
+        url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
+        break;
+    }
+    // url = `${import.meta.env.VITE_API_URL}/todos/all-delete`;
+    const res = await fetch(url, {
+      method: "POST",
+      credentials: "include",
+      cache: "default",
+      redirect: "follow",
+      headers: {
+        "X-CSRF-TOKEN": csrf,
+      },
+    });
     async function func() {
       const result = await res.json();
       console.log(result);
@@ -337,72 +344,80 @@ export const Todo = () => {
     }
   }
 
-  const onClickAllDelete = () => {
-    const processor = {};
+  const processor = {};
+  processor.doLoad = function doLoad(videoHeight) {
     const video = document.getElementById("deleteAnimation");
-    processor.doLoad = function doLoad() {
-      this.video = video;
-      // this.c1 = document.getElementById("c1");
-      // this.ctx1 = this.c1.getContext("2d");
-      this.c2 = document.getElementById("processedAnimation");
-      this.ctx2 = this.c2.getContext("2d");
+    this.video = video;
+    this.c2 = document.getElementById("processedAnimation");
+    this.ctx2 = this.c2.getContext("2d");
+    this.width = 384;
+    this.height = videoHeight;
+    this.timerCallback(videoHeight);
+    // video.addEventListener(
+    //   "play",
+    //   () => {
+    //     this.width = 384;
+    //     this.height = videoHeight;
+    //     this.timerCallback(videoHeight);
+    //   },
+    //   false
+    // );
+  };
+  processor.timerCallback = function timerCallback(videoHeight) {
+    if (this.video.paused || this.video.ended) {
+      return;
+    }
+    this.computeFrame(videoHeight);
+    setTimeout(() => {
+      this.timerCallback(videoHeight);
+    }, 0);
+  };
+  processor.computeFrame = function (videoHeight) {
+    this.ctx2.drawImage(this.video, 0, 0, this.width, this.height);
+    const frame = this.ctx2.getImageData(0, 0, 384, videoHeight);
+    const data = frame.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const red = data[i + 0];
+      const green = data[i + 1];
+      const blue = data[i + 2];
+      if (red < 5 && green < 5 && blue < 5) {
+        data[i + 3] = 0;
+      }
+    }
+    this.ctx2.putImageData(frame, 0, 0);
+  };
 
-      video.addEventListener(
-        "play",
-        () => {
-          this.width = 400;
-          this.height = 300;
-          this.timerCallback();
-        },
-        false
+  const onClickAllDelete = () => {
+    let videoHeight;
+    const screenshotArea = document.getElementById("screenshotArea");
+    const animationArea = document.getElementById("processedAnimation");
+    const deleteAnimation = document.getElementById("deleteAnimation");
+
+    html2canvas(screenshotArea, { scale: 1 }).then((canvas) => {
+      const imagedata = canvas.toDataURL("image/png");
+      videoHeight = canvas.height;
+      // videoHeight = 36;
+      animationArea.style.width = "384px";
+      animationArea.style.height = videoHeight + "px";
+
+      processor.doLoad(videoHeight);
+      // processor.timerCallback(videoHeight);
+      // processor.computeFrame(videoHeight);
+      animationArea.style.backgroundImage = `url(${imagedata})`;
+      console.log(
+        canvas.height,
+        videoHeight,
+        processor.height,
+        animationArea.style.height
       );
-    };
-    processor.timerCallback = function timerCallback() {
-      if (this.video.paused || this.video.ended) {
-        return;
-      }
-      this.computeFrame();
-      setTimeout(() => {
-        this.timerCallback();
-      }, 0);
-    };
-    processor.computeFrame = function () {
-      this.ctx2.drawImage(this.video, 0, 0, this.width, this.height);
-      // const frame = this.ctx2.getImageData(0, 0, this.width, this.height);
-      const frame = this.ctx2.getImageData(0, 0, 400, 300);
-      const data = frame.data;
-
-      for (let i = 0; i < data.length; i += 4) {
-        const red = data[i + 0];
-        const green = data[i + 1];
-        const blue = data[i + 2];
-        if (red < 5 && green < 5 && blue < 5) {
-          data[i + 3] = 0;
-        }
-      }
-      this.ctx2.putImageData(frame, 0, 0);
-    };
-
-    processor.doLoad();
-    processor.timerCallback();
-    processor.computeFrame();
-    html2canvas(document.getElementById("screenshotArea")).then((canvas) => {
-      const data = canvas.toDataURL("image/png");
-      document.getElementById(
-        "processedAnimation"
-      ).style.backgroundImage = `url(${data})`;
     });
-
-    // onClickDelete("all").then(() => {});
     setIsDeletingCompleteTodos(true);
-    document.getElementById("deleteAnimation").play();
-    video.addEventListener(
-      "ended",
-      () => {
-        setIsDeletingCompleteTodos(false);
-      },
-      false
-    );
+    deleteAnimation.play();
+  };
+
+  const deleteFinished = () => {
+    setIsDeletingCompleteTodos(false);
+    onClickDelete("all");
   };
 
   async function getdata() {
@@ -434,8 +449,10 @@ export const Todo = () => {
 
   return (
     <>
-      <p style={{ color: "blue" }}>{frashMessage.message}</p>
-      <p style={{ color: "red" }}>{frashMessage.errorMessage}</p>
+      <div className="frashMessage">
+        <p style={{ color: "blue" }}>{frashMessage.message}</p>
+        <p style={{ color: "red" }}>{frashMessage.errorMessage}</p>
+      </div>
       <Login loginRequest={loginRequest} />
       <button onClick={logout} disabled={!isLogin}>
         ログアウト
@@ -443,45 +460,48 @@ export const Todo = () => {
       <button onClick={getdata}>getdata</button>
       <br></br>
       <button onClick={getIndex}>一覧表示</button>
-      <button onClick={getIncompleteToDo}>未完了一覧</button>
-      <button onClick={getCompleteToDo}>完了一覧</button>
       <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>Springのサーバーへ</a>
       <br></br>
       <div className="menu">
         <button onClick={onClickNew}>新規作成</button>
+        <button onClick={getIncompleteToDo}>未完了リスト</button>
+        <button onClick={getCompleteToDo}>完了リスト</button>
         <button onClick={logout}>ログアウト</button>
       </div>
-      <InputTodo
-        message={formErrorMessage}
-        inputTodo={inputTodo}
-        onChangeTitle={onChangeTodoTitle}
-        onChangeDetail={onChangeTodoDetail}
-        onClick={onClickAdd}
-        // disabled={isMaxLimitIncompleteTodos}
-      />
+      <div className="todos">
+        <InputTodo
+          message={formErrorMessage}
+          inputTodo={inputTodo}
+          onChangeTitle={onChangeTodoTitle}
+          onChangeDetail={onChangeTodoDetail}
+          onClick={onClickAdd}
+          // disabled={isMaxLimitIncompleteTodos}
+        />
 
-      {/* {isMaxLimitIncompleteTodos && (
-        <p style={{ color: "red" }}>登録できるのは５個までです!</p>
-      )} */}
+        {/* {isMaxLimitIncompleteTodos && (
+          <p style={{ color: "red" }}>登録できるのは５個までです!</p>
+        )} */}
 
-      <TodoDetail
-        Todo={todoDetail}
-        edit={onClickEdit}
-        onClickDelete={onClickDelete}
-      />
-      <IncompleteTodos
-        Todos={incompleteTodos}
-        onClickEdit={onClickEdit}
-        onClickDelete={onClickDelete}
-        onClickComplete={onClickComplete}
-      />
-      <CompleteTodos
-        Todos={completeTodos}
-        onClickDelete={onClickDelete}
-        onClickBack={onClickBack}
-        onClickAllDelete={onClickAllDelete}
-        isDeletingCompleteTodos={isDeletingCompleteTodos}
-      />
+        <TodoDetail
+          Todo={todoDetail}
+          edit={onClickEdit}
+          onClickDelete={onClickDelete}
+        />
+        <IncompleteTodos
+          Todos={incompleteTodos}
+          onClickEdit={onClickEdit}
+          onClickDelete={onClickDelete}
+          onClickComplete={onClickComplete}
+        />
+        <CompleteTodos
+          Todos={completeTodos}
+          onClickDelete={onClickDelete}
+          onClickBack={onClickBack}
+          onClickAllDelete={onClickAllDelete}
+          isDeletingCompleteTodos={isDeletingCompleteTodos}
+          deleteFinished={deleteFinished}
+        />
+      </div>
     </>
   );
 };

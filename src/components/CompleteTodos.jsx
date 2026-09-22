@@ -11,18 +11,22 @@ export const CompleteTodos = (props) => {
     onClickBack,
     onClickAllDelete,
     isDeletingCompleteTodos,
+    deleteFinished,
   } = props;
   return (
     <div className="complete-area">
       <h2 className="title">完了のTODO(ゴミ箱)</h2>
       {!isDeletingCompleteTodos && <p style={{ color: "red" }}>削除前</p>}
-      <div id="screenshotArea" style={{ display: isDeletingCompleteTodos ? "none" : "block" }}>
+      <div
+        id="screenshotArea"
+        style={{ display: isDeletingCompleteTodos ? "none" : "block" }}
+      >
         <ul>
           {Todos.map((todo) => {
             return (
               <li key={todo.id}>
                 <div className="list-row">
-                  <div className="list-title2">
+                  <div className="list-title-complete">
                     <p className="todo-item">{todo.todo}</p>
                   </div>
                   <div className="list-button">
@@ -48,7 +52,7 @@ export const CompleteTodos = (props) => {
 
       <div style={{ display: isDeletingCompleteTodos ? "block" : "none" }}>
         {isDeletingCompleteTodos && <p style={{ color: "red" }}>削除中</p>}
-        <canvas id="processedAnimation" width="400"></canvas>
+        <canvas id="processedAnimation"></canvas>
       </div>
       <button
         disabled={isDeletingCompleteTodos}
@@ -57,8 +61,14 @@ export const CompleteTodos = (props) => {
       >
         すべて削除（爆破）
       </button>
-      
-      <video id="deleteAnimation" src={animation} width="0" height="0">
+
+      <video
+        id="deleteAnimation"
+        src={animation}
+        width="0"
+        height="0"
+        onEnded={() => deleteFinished()}
+      >
         <p>動画を再生できません。</p>
       </video>
     </div>

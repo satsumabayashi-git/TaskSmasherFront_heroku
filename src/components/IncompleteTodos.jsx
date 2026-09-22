@@ -8,7 +8,7 @@ export const IncompleteTodos = (props) => {
           return (
             <li key={todo.id}>
               <div className="list-row">
-                <div className="list-title1">
+                <div className="list-title-incomplete">
                   <p className="todo-item">{todo.todo}</p>
                 </div>
                 <div className="list-button">

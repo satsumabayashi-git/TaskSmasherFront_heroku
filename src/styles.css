@@ -55,11 +55,12 @@ button:hover {
 th {
   padding: 0 16px;
   width: 100px;
+  vertical-align: top;
 }
 
 td {
   padding: 0 8px;
-  width: 200px;
+  width: 280px;
 }
 
 .input-area {
@@ -100,16 +101,16 @@ td {
   align-items: center;
 }
 
-.list-title1 {
-  width: 170px;
+.list-title-incomplete {
+  width: 155px;
 }
 
-.list-title2 {
-  width: 225px;
+.list-title-complete {
+  width: 215px;
 }
 
 .list-button {
-  display:flex;
+  display: flex;
 }
 
 .todo-item {
@@ -139,4 +140,9 @@ canvas {
 
 #screenshotArea {
   background-color: #c9dede;
+}
+
+.todos {
+  display: flex;
+  flex-wrap: wrap;
 }
