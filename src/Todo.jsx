@@ -68,6 +68,7 @@ export const Todo = () => {
     screenshot();
   }, [completeTodos]);
 
+  
   async function getIndex() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
       credentials: "include",
