@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 // import dotenv from "dotenv";
 import cookie from "cookie";
@@ -25,9 +25,10 @@ export const Todo = () => {
   const [todoDetail, setTodoDetail] = useState({});
   const [incompleteTodos, setIncompleteTodos] = useState([]);
   const [completeTodos, setCompleteTodos] = useState([]);
-  const [frashMessage, setFrashMessage] = useState({});
+  const [flashMessage, setFlashMessage] = useState({});
   const [formErrorMessage, setFormErrorMessage] = useState({});
   const [isDeletingCompleteTodos, setIsDeletingCompleteTodos] = useState(false);
+  const [videoHeight, setVideoHeight] = useState();
 
   // const isMaxLimitIncompleteTodos = incompleteTodos.length >= 5;
 
@@ -50,17 +51,36 @@ export const Todo = () => {
     if (res.ok) {
       func();
     } else if (res.fobidden) {
-      setFrashMessage({
+      setFlashMessage({
         errorMessage: "アクセスは許可されませんでした。",
       });
       // alert("forbidden");
     } else {
-      setFrashMessage({
+      setFlashMessage({
         errorMessage: `アクセスに失敗しました。error:${res.status}`,
       });
       // alert(`error:${res.status}`);
     }
   };
+
+  // useEffect(() => {
+  //   console.log("再レンダリングされるたび実行");
+  // });
+
+  // window.onload = () => {
+  // };
+
+  // useEffect(() => {
+  //   processor.video = document.getElementById("deleteAnimation");
+  //   processor.c2 = document.getElementById("processedAnimation");
+  //   processor.ctx2 = processor.c2.getContext("2d");
+  //   console.log("読み込み完了");
+  // }, []);
+
+  useEffect(() => {
+    console.log("getCompleteToDo後に実行");
+    screenshot();
+  }, [completeTodos]);
 
   async function getIndex() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
@@ -134,7 +154,7 @@ export const Todo = () => {
         todo: todo.todo,
         detail: todo.detail,
       });
-      setFrashMessage({});
+      setFlashMessage({});
       return todo;
     }
     APIAccess(res, func);
@@ -193,11 +213,11 @@ export const Todo = () => {
         setFormErrorMessage({});
       }
       message.postResult === "saved" &&
-        setFrashMessage({
+        setFlashMessage({
           message: "新しいToDoが作成されました",
         });
       message.postResult === "updated" &&
-        setFrashMessage({
+        setFlashMessage({
           message: "ToDoが更新されました",
         });
       setTodoDetail({});
@@ -208,16 +228,17 @@ export const Todo = () => {
   async function onClickDelete(id) {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
-    let url;
-    switch (id) {
-      case "all":
-        url = `${import.meta.env.VITE_API_URL}/todos/all-delete`;
-        break;
-      default:
-        url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
-        break;
-    }
-    // url = `${import.meta.env.VITE_API_URL}/todos/all-delete`;
+    let url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
+    id == "all" && (url = `${import.meta.env.VITE_API_URL}/todos/all-delete`);
+    // let url;
+    // switch (id) {
+    //   case "all":
+    //     url = `${import.meta.env.VITE_API_URL}/todos/all-delete`;
+    //     break;
+    //   default:
+    //     url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
+    //     break;
+    // }
     const res = await fetch(url, {
       method: "POST",
       credentials: "include",
@@ -233,7 +254,7 @@ export const Todo = () => {
       // getIndex();
       getIncompleteToDo();
       getCompleteToDo();
-      setFrashMessage({
+      setFlashMessage({
         message: "ToDoを削除しました",
       });
     }
@@ -304,7 +325,7 @@ export const Todo = () => {
       console.log(message);
       if (message.result === "success") {
         setIsLogin(true);
-        setFrashMessage({
+        setFlashMessage({
           message: "ログインしました。",
         });
         // alert("ログインしました");
@@ -312,7 +333,7 @@ export const Todo = () => {
         getIncompleteToDo();
         getCompleteToDo();
       } else if (message.result === "failure") {
-        setFrashMessage({
+        setFlashMessage({
           errorMessage: "メールアドレスまたはパスワードが正しくありません。",
         });
         // alert("メールアドレスまたはパスワードが正しくありません。");
@@ -332,12 +353,12 @@ export const Todo = () => {
     console.log(message.result);
     if (message.result === "success") {
       setIsLogin(false);
-      setFrashMessage({
+      setFlashMessage({
         message: "ログアウトしました",
       });
       // alert("ログアウトしました");
     } else {
-      setFrashMessage({
+      setFlashMessage({
         errorMessage: "エラーが発生しました",
       });
       // alert("エラーが発生しました");
@@ -345,36 +366,40 @@ export const Todo = () => {
   }
 
   const processor = {};
-  processor.doLoad = function doLoad(videoHeight) {
-    const video = document.getElementById("deleteAnimation");
-    this.video = video;
+  processor.item = "gomi";
+
+  processor.doLoad = function doLoad() {
+    // alert("doload");
+    // const video = document.getElementById("deleteAnimation");
+    // this.video = video;
+    this.video = document.getElementById("deleteAnimation");
     this.c2 = document.getElementById("processedAnimation");
     this.ctx2 = this.c2.getContext("2d");
     this.width = 384;
-    this.height = videoHeight;
-    this.timerCallback(videoHeight);
+    this.height = videoHeight < 144 ? 144 : videoHeight;
+    this.timerCallback();
     // video.addEventListener(
     //   "play",
     //   () => {
     //     this.width = 384;
     //     this.height = videoHeight;
-    //     this.timerCallback(videoHeight);
+    //     this.timerCallback();
     //   },
     //   false
     // );
   };
-  processor.timerCallback = function timerCallback(videoHeight) {
+  processor.timerCallback = function timerCallback() {
     if (this.video.paused || this.video.ended) {
       return;
     }
-    this.computeFrame(videoHeight);
+    this.computeFrame();
     setTimeout(() => {
-      this.timerCallback(videoHeight);
+      this.timerCallback();
     }, 0);
   };
-  processor.computeFrame = function (videoHeight) {
+  processor.computeFrame = function () {
     this.ctx2.drawImage(this.video, 0, 0, this.width, this.height);
-    const frame = this.ctx2.getImageData(0, 0, 384, videoHeight);
+    const frame = this.ctx2.getImageData(0, 0, 384, this.height);
     const data = frame.data;
     for (let i = 0; i < data.length; i += 4) {
       const red = data[i + 0];
@@ -387,32 +412,46 @@ export const Todo = () => {
     this.ctx2.putImageData(frame, 0, 0);
   };
 
-  const onClickAllDelete = () => {
-    let videoHeight;
+  const screenshot = () => {
     const screenshotArea = document.getElementById("screenshotArea");
     const animationArea = document.getElementById("processedAnimation");
-    const deleteAnimation = document.getElementById("deleteAnimation");
 
     html2canvas(screenshotArea, { scale: 1 }).then((canvas) => {
       const imagedata = canvas.toDataURL("image/png");
-      videoHeight = canvas.height;
-      // videoHeight = 36;
+      const height = canvas.height;
       animationArea.style.width = "384px";
-      animationArea.style.height = videoHeight + "px";
+      animationArea.style.height = height + "px";
 
-      processor.doLoad(videoHeight);
-      // processor.timerCallback(videoHeight);
-      // processor.computeFrame(videoHeight);
+      setVideoHeight(height);
       animationArea.style.backgroundImage = `url(${imagedata})`;
-      console.log(
-        canvas.height,
-        videoHeight,
-        processor.height,
-        animationArea.style.height
-      );
+      console.log("スクショできた");
     });
+  };
+
+  const onClickAllDelete = () => {
+    // let videoHeight;
+    // const screenshotArea = document.getElementById("screenshotArea");
+    // const animationArea = document.getElementById("processedAnimation");
+    const deleteAnimation = document.getElementById("deleteAnimation");
+    // processor.video = deleteAnimation;
+    // processor.c2 = document.getElementById("processedAnimation");
+    // processor.ctx2 = processor.c2.getContext("2d");
+    // processor.height = videoHeight;
+    // processor.width = 384;
+
+    // html2canvas(screenshotArea, { scale: 1 }).then((canvas) => {
+    //   const imagedata = canvas.toDataURL("image/png");
+    //   videoHeight = canvas.height;
+    //   animationArea.style.width = "384px";
+    //   animationArea.style.height = videoHeight + "px";
+    //   processor.doLoad(videoHeight);
+    //   animationArea.style.backgroundImage = `url(${imagedata})`;
+    // });
     setIsDeletingCompleteTodos(true);
+
     deleteAnimation.play();
+    // processor.video ? processor.video.play() : console.log("失敗");
+    // processor.timerCallback();
   };
 
   const deleteFinished = () => {
@@ -449,15 +488,16 @@ export const Todo = () => {
 
   return (
     <>
-      <div className="frashMessage">
-        <p style={{ color: "blue" }}>{frashMessage.message}</p>
-        <p style={{ color: "red" }}>{frashMessage.errorMessage}</p>
+      <div className="flashMessage">
+        <p style={{ color: "blue" }}>{flashMessage.message}</p>
+        <p style={{ color: "red" }}>{flashMessage.errorMessage}</p>
       </div>
       <Login loginRequest={loginRequest} />
       <button onClick={logout} disabled={!isLogin}>
         ログアウト
       </button>
       <button onClick={getdata}>getdata</button>
+      <button onClick={screenshot}>スクショ</button>
       <br></br>
       <button onClick={getIndex}>一覧表示</button>
       <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>Springのサーバーへ</a>
@@ -494,12 +534,13 @@ export const Todo = () => {
           onClickComplete={onClickComplete}
         />
         <CompleteTodos
-          Todos={completeTodos}
+          todos={completeTodos}
           onClickDelete={onClickDelete}
           onClickBack={onClickBack}
           onClickAllDelete={onClickAllDelete}
           isDeletingCompleteTodos={isDeletingCompleteTodos}
           deleteFinished={deleteFinished}
+          processer={processor}
         />
       </div>
     </>
