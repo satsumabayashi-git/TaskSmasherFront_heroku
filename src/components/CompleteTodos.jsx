@@ -67,8 +67,6 @@ export const CompleteTodos = (props) => {
         すべて削除（爆破）
       </button>
 
-      <div>{processer.item}</div>
-
       <video
         id="deleteAnimation"
         src={animation}

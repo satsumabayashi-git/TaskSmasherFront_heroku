@@ -63,20 +63,6 @@ export const Todo = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("再レンダリングされるたび実行");
-  // });
-
-  // window.onload = () => {
-  // };
-
-  // useEffect(() => {
-  //   processor.video = document.getElementById("deleteAnimation");
-  //   processor.c2 = document.getElementById("processedAnimation");
-  //   processor.ctx2 = processor.c2.getContext("2d");
-  //   console.log("読み込み完了");
-  // }, []);
-
   useEffect(() => {
     console.log("getCompleteToDo後に実行");
     screenshot();
@@ -230,15 +216,6 @@ export const Todo = () => {
     const csrf = cookies._ctkn;
     let url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
     id == "all" && (url = `${import.meta.env.VITE_API_URL}/todos/all-delete`);
-    // let url;
-    // switch (id) {
-    //   case "all":
-    //     url = `${import.meta.env.VITE_API_URL}/todos/all-delete`;
-    //     break;
-    //   default:
-    //     url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
-    //     break;
-    // }
     const res = await fetch(url, {
       method: "POST",
       credentials: "include",
@@ -366,27 +343,13 @@ export const Todo = () => {
   }
 
   const processor = {};
-  processor.item = "gomi";
-
   processor.doLoad = function doLoad() {
-    // alert("doload");
-    // const video = document.getElementById("deleteAnimation");
-    // this.video = video;
     this.video = document.getElementById("deleteAnimation");
     this.c2 = document.getElementById("processedAnimation");
     this.ctx2 = this.c2.getContext("2d");
     this.width = 384;
     this.height = videoHeight < 144 ? 144 : videoHeight;
-    this.timerCallback();
-    // video.addEventListener(
-    //   "play",
-    //   () => {
-    //     this.width = 384;
-    //     this.height = videoHeight;
-    //     this.timerCallback();
-    //   },
-    //   false
-    // );
+    this.height && this.timerCallback();
   };
   processor.timerCallback = function timerCallback() {
     if (this.video.paused || this.video.ended) {
@@ -429,29 +392,10 @@ export const Todo = () => {
   };
 
   const onClickAllDelete = () => {
-    // let videoHeight;
-    // const screenshotArea = document.getElementById("screenshotArea");
-    // const animationArea = document.getElementById("processedAnimation");
     const deleteAnimation = document.getElementById("deleteAnimation");
-    // processor.video = deleteAnimation;
-    // processor.c2 = document.getElementById("processedAnimation");
-    // processor.ctx2 = processor.c2.getContext("2d");
-    // processor.height = videoHeight;
-    // processor.width = 384;
 
-    // html2canvas(screenshotArea, { scale: 1 }).then((canvas) => {
-    //   const imagedata = canvas.toDataURL("image/png");
-    //   videoHeight = canvas.height;
-    //   animationArea.style.width = "384px";
-    //   animationArea.style.height = videoHeight + "px";
-    //   processor.doLoad(videoHeight);
-    //   animationArea.style.backgroundImage = `url(${imagedata})`;
-    // });
     setIsDeletingCompleteTodos(true);
-
     deleteAnimation.play();
-    // processor.video ? processor.video.play() : console.log("失敗");
-    // processor.timerCallback();
   };
 
   const deleteFinished = () => {
@@ -471,19 +415,6 @@ export const Todo = () => {
       var content = value.split("=");
       console.log(content[1]);
     });
-
-    // 特定のキー（例: token）を取得する関数
-    // function getCookie(name) {
-    //   const value = `; ${document.cookie}`;
-    //   const parts = value.split(`; ${name}=`);
-    //   if (parts.length === 2) {
-    //     return parts.pop().split(";").shift();
-    //   }
-    //   return null; // 見つからない場合
-    // }
-    // const cookies = cookie.parse(document.cookie);
-    // const csrf = cookies._ctkn;
-    // console.log(csrf);
   }
 
   return (
