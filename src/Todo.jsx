@@ -30,7 +30,7 @@ export const Todo = () => {
   const [isDeletingCompleteTodos, setIsDeletingCompleteTodos] = useState(false);
   const [videoHeight, setVideoHeight] = useState();
 
-  // const isMaxLimitIncompleteTodos = incompleteTodos.length >= 5;
+  const isMaxLimitIncompleteTodos = incompleteTodos.length >= 10;
 
   const onChangeTodoTitle = (event) =>
     setInputTodo({
@@ -447,12 +447,8 @@ export const Todo = () => {
           onChangeTitle={onChangeTodoTitle}
           onChangeDetail={onChangeTodoDetail}
           onClick={onClickAdd}
-          // disabled={isMaxLimitIncompleteTodos}
+          disabled={isMaxLimitIncompleteTodos}
         />
-
-        {/* {isMaxLimitIncompleteTodos && (
-          <p style={{ color: "red" }}>登録できるのは５個までです!</p>
-        )} */}
 
         <TodoDetail
           Todo={todoDetail}

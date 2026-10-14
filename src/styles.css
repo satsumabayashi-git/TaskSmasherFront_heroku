@@ -146,3 +146,8 @@ canvas {
   display: flex;
   flex-wrap: wrap;
 }
+
+.flashMessage {
+  margin: 0 auto;
+  text-align: center;
+}

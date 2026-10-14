@@ -1,8 +1,14 @@
-const style = {
-};
+const style = {};
 
 export const InputTodo = (props) => {
-  const { message, inputTodo, onChangeTitle, onChangeDetail, onClick } = props;
+  const {
+    message,
+    inputTodo,
+    onChangeTitle,
+    onChangeDetail,
+    onClick,
+    disabled,
+  } = props;
   return (
     <div className="input-area">
       <h2>{inputTodo.isNew ? "新規TODO" : "TODO編集"}</h2>
@@ -34,7 +40,12 @@ export const InputTodo = (props) => {
         <span style={{ color: "red" }}>{message.detail}</span>
         <br></br>
       </form>
-      <button onClick={onClick}>{inputTodo.isNew ? "追加" : "更新"}</button>
+      {disabled && (
+        <p style={{ color: "red" }}>登録できるのは10個までです!</p>
+      )}
+      <button onClick={onClick} disabled={disabled}>
+        {inputTodo.isNew ? "追加" : "更新"}
+      </button>
       <button>戻る</button>
     </div>
   );
