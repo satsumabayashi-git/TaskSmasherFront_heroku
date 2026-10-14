@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import dotenv from "dotenv";
 import cookie from "cookie";
 // import request from "superagent";
@@ -68,8 +68,7 @@ export const Todo = () => {
     screenshot();
   }, [completeTodos]);
 
-  
-  async function getIndex() {
+  const getIndex = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
       credentials: "include",
       cache: "default",
@@ -79,9 +78,9 @@ export const Todo = () => {
     console.log(todos);
     setIncompleteTodos(todos);
     return todos;
-  }
+  };
 
-  async function getIncompleteToDo() {
+  const getIncompleteToDo = async () => {
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/todos/incomplete`,
       {
@@ -94,22 +93,22 @@ export const Todo = () => {
     console.log(todos);
     setIncompleteTodos(todos);
     return todos;
-  }
+  };
 
-  async function getCompleteToDo() {
+  const getCompleteToDo = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/complete`, {
       credentials: "include",
       cache: "default",
       redirect: "follow",
     });
-    async function func() {
+    const func = async () => {
       const todos = await res.json();
       console.log(todos);
       setCompleteTodos(todos);
       return todos;
-    }
+    };
     APIAccess(res, func);
-  }
+  };
 
   // async function onClickShow(id) {
   //   const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
@@ -124,14 +123,14 @@ export const Todo = () => {
   //   APIAccess(res, func);
   // }
 
-  async function onClickEdit(id) {
+  const onClickEdit = async (id) => {
     // const todo = await onClickShow(id);
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
       credentials: "include",
       cache: "default",
       redirect: "follow",
     });
-    async function func() {
+    const func = async () => {
       const todo = await res.json();
       console.log(todo);
       setTodoDetail(todo);
@@ -143,9 +142,9 @@ export const Todo = () => {
       });
       setFlashMessage({});
       return todo;
-    }
+    };
     APIAccess(res, func);
-  }
+  };
 
   const onClickNew = () => {
     setInputTodo({
@@ -156,12 +155,11 @@ export const Todo = () => {
     });
   };
 
-  async function onClickAdd() {
+  const onClickAdd = async () => {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
     const toDoForm = new FormData(document.getElementById("toDoForm"));
-    let method = "save";
-    inputTodo.isNew || (method = "update");
+    let method = inputTodo.isNew ? "save" : "update";
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${method}`, {
       method: "POST",
       body: toDoForm,
@@ -172,12 +170,12 @@ export const Todo = () => {
         "X-CSRF-TOKEN": csrf,
       },
     });
-    async function func() {
+    const func = async () => {
       const message = await res.json();
       console.log(message);
-      let todoError;
-      let detailError;
       if (message.postResult === "validationError") {
+        let todoError;
+        let detailError;
         // console.log(message.errorList);
         message.errorList.forEach((error) => {
           error.field === "todo" && (todoError = error.defaultMessage);
@@ -208,11 +206,11 @@ export const Todo = () => {
           message: "ToDoが更新されました",
         });
       setTodoDetail({});
-    }
+    };
     APIAccess(res, func);
-  }
+  };
 
-  async function onClickDelete(id) {
+  const onClickDelete = async (id) => {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
     let url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
@@ -226,7 +224,7 @@ export const Todo = () => {
         "X-CSRF-TOKEN": csrf,
       },
     });
-    async function func() {
+    const func = async () => {
       const result = await res.json();
       console.log(result);
       // getIndex();
@@ -235,11 +233,11 @@ export const Todo = () => {
       setFlashMessage({
         message: "ToDoを削除しました",
       });
-    }
+    };
     APIAccess(res, func);
-  }
+  };
 
-  async function onClickComplete(id) {
+  const onClickComplete = async (id) => {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
     const res = await fetch(
@@ -254,17 +252,17 @@ export const Todo = () => {
         },
       }
     );
-    async function func() {
+    const func = async () => {
       const result = await res.json();
       console.log(result);
       // getIndex();
       getIncompleteToDo();
       getCompleteToDo();
-    }
+    };
     APIAccess(res, func);
-  }
+  };
 
-  async function onClickBack(id) {
+  const onClickBack = async (id) => {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
     const res = await fetch(
@@ -279,17 +277,17 @@ export const Todo = () => {
         },
       }
     );
-    async function func() {
+    const func = async () => {
       const result = await res.json();
       console.log(result);
       // getIndex();
       getIncompleteToDo();
       getCompleteToDo();
-    }
+    };
     APIAccess(res, func);
-  }
+  };
 
-  async function loginRequest() {
+  const loginRequest = useCallback(async () => {
     const loginForm = new FormData(document.getElementById("loginForm"));
     const res = await fetch(`${import.meta.env.VITE_API_URL}/authentication`, {
       method: "POST",
@@ -298,7 +296,7 @@ export const Todo = () => {
       cache: "default",
       redirect: "follow",
     });
-    async function func() {
+    const func = async () => {
       const message = await res.json();
       console.log(message);
       if (message.result === "success") {
@@ -316,11 +314,11 @@ export const Todo = () => {
         });
         // alert("メールアドレスまたはパスワードが正しくありません。");
       }
-    }
+    };
     APIAccess(res, func);
-  }
+  }, []);
 
-  async function logout() {
+  const logout = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
       method: "POST",
       credentials: "include",
@@ -341,7 +339,7 @@ export const Todo = () => {
       });
       // alert("エラーが発生しました");
     }
-  }
+  };
 
   const processor = {};
   processor.doLoad = function doLoad() {
@@ -420,6 +418,12 @@ export const Todo = () => {
 
   return (
     <>
+      {/* <Router>
+        <Routes>
+          <Route path="/" element={<InputTodo />} />
+          <Route path="/IncompleteTodos" element={<IncompleteTodos />} />
+        </Routes>
+      </Router> */}
       <div className="flashMessage">
         <p style={{ color: "blue" }}>{flashMessage.message}</p>
         <p style={{ color: "red" }}>{flashMessage.errorMessage}</p>

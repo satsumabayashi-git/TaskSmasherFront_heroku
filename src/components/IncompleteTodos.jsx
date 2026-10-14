@@ -1,5 +1,8 @@
-export const IncompleteTodos = (props) => {
+import { memo } from "react";
+
+export const IncompleteTodos = memo((props) => {
   const { Todos, onClickEdit, onClickDelete, onClickComplete } = props;
+  
   return (
     <div className="incomplete-area">
       <h2 className="title">未完了のTODO</h2>
@@ -24,4 +27,4 @@ export const IncompleteTodos = (props) => {
       </ul>
     </div>
   );
-};
+});

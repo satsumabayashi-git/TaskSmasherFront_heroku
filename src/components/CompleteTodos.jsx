@@ -1,10 +1,11 @@
+import { memo } from "react";
 import animation from "../media/nc274685_爆発CGアニメーション_その５.mp4";
 
 const style = {
   // display: "none",
 };
 
-export const CompleteTodos = (props) => {
+export const CompleteTodos = memo((props) => {
   const {
     todos,
     onClickDelete,
@@ -14,6 +15,7 @@ export const CompleteTodos = (props) => {
     deleteFinished,
     processer,
   } = props;
+
   return (
     <div className="complete-area">
       <h2 className="title">完了のTODO(ゴミ箱)</h2>
@@ -79,4 +81,4 @@ export const CompleteTodos = (props) => {
       </video>
     </div>
   );
-};
+});

@@ -1,7 +1,9 @@
+import { memo } from "react";
+
 const style = {
 };
 
-export const Login = (props) => {
+export const Login = memo((props) => {
   const { loginRequest } = props;
 
   return (
@@ -21,4 +23,4 @@ export const Login = (props) => {
       <button onClick={loginRequest}>ログイン</button>
     </div>
   );
-};
+});

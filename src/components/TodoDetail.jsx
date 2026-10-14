@@ -1,5 +1,8 @@
-export const TodoDetail = (props) => {
+import { memo } from "react";
+
+export const TodoDetail = memo((props) => {
   const { Todo, Edit, onClickDelete } = props;
+  
   return (
     <div className="incomplete-area">
       <h2 className="title">TODO詳細</h2>
@@ -49,7 +52,7 @@ export const TodoDetail = (props) => {
       </div>
     </div>
   );
-};
+});
 
 /* <table border="1">
         <tr>
