@@ -53,36 +53,3 @@ export const TodoDetail = memo((props) => {
     </div>
   );
 });
-
-/* <table border="1">
-        <tr>
-            <th>ID</th>
-            <td th:text="${todo.id}"></td>
-        </tr>
-        <tr>
-            <th>タイトル</th>
-            <td th:text="${todo.todo}"></td>
-        </tr>
-        <tr>
-            <th>詳細</th>
-            <td th:text="${todo.detail}"></td>
-        </tr>
-       <tr>
-            <th>登録日時</th>
-            <td th:text="${todo.createdAt.format(
-                T(java.time.format.DateTimeFormatter).
-                ofPattern('yyyy/MM/dd HH:mm:ss'))}">
-            </td>
-        </tr>
-       <tr>
-            <th>更新日時</th>
-            <td th:text="${todo.updatedAt.format(
-                T(java.time.format.DateTimeFormatter).
-                ofPattern('yyyy/MM/dd HH:mm:ss'))}">
-            </td>
-        </tr>
-    </table>
-    <a th:href="@{/todos/edit/{id}(id=${todo.id})}">編集</a>
-    <form th:action="@{/todos/delete/{id}(id=${todo.id})}" method="post">
-        <input type="submit" value="削除">
-    </form> */

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import dotenv from "dotenv";
 import cookie from "cookie";
 // import request from "superagent";
@@ -47,26 +47,15 @@ export const Todo = () => {
       detail: event.target.value,
     });
 
-  const APIAccess = (res, func) => {
-    if (res.ok) {
-      func();
-    } else if (res.fobidden) {
-      setFlashMessage({
-        errorMessage: "アクセスは許可されませんでした。",
-      });
-      // alert("forbidden");
-    } else {
-      setFlashMessage({
-        errorMessage: `アクセスに失敗しました。error:${res.status}`,
-      });
-      // alert(`error:${res.status}`);
-    }
-  };
-
   useEffect(() => {
     console.log("getCompleteToDo後に実行");
     screenshot();
   }, [completeTodos]);
+
+  // useEffect(() => {
+  //   getCompleteToDo();
+  //   getIncompleteToDo();
+  // }, []);
 
   const getIndex = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
@@ -80,34 +69,63 @@ export const Todo = () => {
     return todos;
   };
 
-  const getIncompleteToDo = async () => {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/todos/incomplete`,
-      {
-        credentials: "include",
-        cache: "default",
-        redirect: "follow",
-      }
-    );
-    const todos = await res.json();
-    console.log(todos);
-    setIncompleteTodos(todos);
-    return todos;
-  };
-
-  const getCompleteToDo = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/complete`, {
+  const APIAccess = async (path, func, method = "GET", form) => {
+    const cookies = cookie.parse(document.cookie);
+    const csrf = cookies._ctkn;
+    const options = {
+      method: method,
       credentials: "include",
       cache: "default",
       redirect: "follow",
-    });
-    const func = async () => {
-      const todos = await res.json();
-      console.log(todos);
-      setCompleteTodos(todos);
-      return todos;
+      headers: {
+        "X-CSRF-TOKEN": csrf,
+      },
     };
-    APIAccess(res, func);
+    method == "POST" && (options.body = form);
+    try {
+      const res = await fetch(path, options);
+      if (res.fobidden) {
+        setFlashMessage({
+          errorMessage: "アクセスは許可されませんでした。",
+        });
+        return;
+      }
+      try {
+        const json = await res.json();
+        func(json);
+      } catch (jsonErr) {
+        console.log(jsonErr);
+        setIsLogin(false);
+        setFlashMessage({
+          errorMessage: "ログインしてください。",
+        });
+      }
+    } catch (fetchErr) {
+      console.log(fetchErr);
+      setFlashMessage({
+        errorMessage: `サーバーへのアクセスに失敗しました。${fetchErr}`,
+      });
+    }
+  };
+
+  const getIncompleteToDo = async () => {
+    const path = `${import.meta.env.VITE_API_URL}/todos/incomplete`;
+    const func = (json) => {
+      console.log(json);
+      setIncompleteTodos(json);
+      return json;
+    };
+    APIAccess(path, func);
+  };
+
+  const getCompleteToDo = async () => {
+    const path = `${import.meta.env.VITE_API_URL}/todos/complete`;
+    const func = (json) => {
+      console.log(json);
+      setCompleteTodos(json);
+      return json;
+    };
+    APIAccess(path, func);
   };
 
   // async function onClickShow(id) {
@@ -124,26 +142,20 @@ export const Todo = () => {
   // }
 
   const onClickEdit = async (id) => {
-    // const todo = await onClickShow(id);
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
-      credentials: "include",
-      cache: "default",
-      redirect: "follow",
-    });
-    const func = async () => {
-      const todo = await res.json();
-      console.log(todo);
-      setTodoDetail(todo);
+    const path = `${import.meta.env.VITE_API_URL}/todos/${id}`;
+    const func = (json) => {
+      console.log(json);
+      setTodoDetail(json);
       setInputTodo({
-        id: todo.id,
+        id: json.id,
         isNew: false,
-        todo: todo.todo,
-        detail: todo.detail,
+        todo: json.todo,
+        detail: json.detail,
       });
       setFlashMessage({});
-      return todo;
+      return json;
     };
-    APIAccess(res, func);
+    APIAccess(path, func);
   };
 
   const onClickNew = () => {
@@ -156,28 +168,16 @@ export const Todo = () => {
   };
 
   const onClickAdd = async () => {
-    const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
-    const toDoForm = new FormData(document.getElementById("toDoForm"));
-    let method = inputTodo.isNew ? "save" : "update";
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/${method}`, {
-      method: "POST",
-      body: toDoForm,
-      credentials: "include",
-      cache: "default",
-      redirect: "follow",
-      headers: {
-        "X-CSRF-TOKEN": csrf,
-      },
-    });
-    const func = async () => {
-      const message = await res.json();
-      console.log(message);
-      if (message.postResult === "validationError") {
+    const form = new FormData(document.getElementById("toDoForm"));
+    const status = inputTodo.isNew ? "save" : "update";
+    const path = `${import.meta.env.VITE_API_URL}/todos/${status}`;
+    const func = (json) => {
+      console.log(json);
+      if (json.postResult === "validationError") {
         let todoError;
         let detailError;
-        // console.log(message.errorList);
-        message.errorList.forEach((error) => {
+        // console.log(json.errorList);
+        json.errorList.forEach((error) => {
           error.field === "todo" && (todoError = error.defaultMessage);
           error.field === "detail" && (detailError = error.defaultMessage);
         });
@@ -197,36 +197,26 @@ export const Todo = () => {
         });
         setFormErrorMessage({});
       }
-      message.postResult === "saved" &&
+      json.postResult === "saved" &&
         setFlashMessage({
           message: "新しいToDoが作成されました",
         });
-      message.postResult === "updated" &&
+      json.postResult === "updated" &&
         setFlashMessage({
           message: "ToDoが更新されました",
         });
       setTodoDetail({});
     };
-    APIAccess(res, func);
+    APIAccess(path, func, "POST", form);
   };
 
   const onClickDelete = async (id) => {
-    const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
-    let url = `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
-    id == "all" && (url = `${import.meta.env.VITE_API_URL}/todos/all-delete`);
-    const res = await fetch(url, {
-      method: "POST",
-      credentials: "include",
-      cache: "default",
-      redirect: "follow",
-      headers: {
-        "X-CSRF-TOKEN": csrf,
-      },
-    });
-    const func = async () => {
-      const result = await res.json();
-      console.log(result);
+    const path =
+      id == "all"
+        ? `${import.meta.env.VITE_API_URL}/todos/all-delete`
+        : `${import.meta.env.VITE_API_URL}/todos/delete/${id}`;
+    const func = (json) => {
+      console.log(json);
       // getIndex();
       getIncompleteToDo();
       getCompleteToDo();
@@ -234,72 +224,37 @@ export const Todo = () => {
         message: "ToDoを削除しました",
       });
     };
-    APIAccess(res, func);
+    APIAccess(path, func, "POST");
   };
 
   const onClickComplete = async (id) => {
-    const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/todos/complete/${id}`,
-      {
-        method: "POST",
-        credentials: "include",
-        cache: "default",
-        redirect: "follow",
-        headers: {
-          "X-CSRF-TOKEN": csrf,
-        },
-      }
-    );
-    const func = async () => {
-      const result = await res.json();
-      console.log(result);
+    const path = `${import.meta.env.VITE_API_URL}/todos/complete/${id}`;
+    const func = (json) => {
+      console.log(json);
       // getIndex();
       getIncompleteToDo();
       getCompleteToDo();
     };
-    APIAccess(res, func);
+    APIAccess(path, func, "POST");
   };
 
   const onClickBack = async (id) => {
-    const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/todos/incomplete/${id}`,
-      {
-        method: "POST",
-        credentials: "include",
-        cache: "default",
-        redirect: "follow",
-        headers: {
-          "X-CSRF-TOKEN": csrf,
-        },
-      }
-    );
-    const func = async () => {
-      const result = await res.json();
-      console.log(result);
+    const path = `${import.meta.env.VITE_API_URL}/todos/incomplete/${id}`;
+    const func = (json) => {
+      console.log(json);
       // getIndex();
       getIncompleteToDo();
       getCompleteToDo();
     };
-    APIAccess(res, func);
+    APIAccess(path, func, "POST");
   };
 
   const loginRequest = useCallback(async () => {
-    const loginForm = new FormData(document.getElementById("loginForm"));
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/authentication`, {
-      method: "POST",
-      body: loginForm,
-      credentials: "include",
-      cache: "default",
-      redirect: "follow",
-    });
-    const func = async () => {
-      const message = await res.json();
-      console.log(message);
-      if (message.result === "success") {
+    const path = `${import.meta.env.VITE_API_URL}/authentication`;
+    const form = new FormData(document.getElementById("loginForm"));
+    const func = (json) => {
+      console.log(json);
+      if (json.result === "success") {
         setIsLogin(true);
         setFlashMessage({
           message: "ログインしました。",
@@ -307,38 +262,37 @@ export const Todo = () => {
         // alert("ログインしました");
         // getIndex();
         getIncompleteToDo();
-        getCompleteToDo();
-      } else if (message.result === "failure") {
+        // getCompleteToDo();
+      } else if (json.result === "failure") {
         setFlashMessage({
           errorMessage: "メールアドレスまたはパスワードが正しくありません。",
         });
         // alert("メールアドレスまたはパスワードが正しくありません。");
+      } else {
+        console.log("誤った応答です");
       }
     };
-    APIAccess(res, func);
+    APIAccess(path, func, "POST", form);
   }, []);
 
   const logout = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
-      method: "POST",
-      credentials: "include",
-      cache: "default",
-      redirect: "follow",
-    });
-    const message = await res.json();
-    console.log(message.result);
-    if (message.result === "success") {
-      setIsLogin(false);
-      setFlashMessage({
-        message: "ログアウトしました",
-      });
-      // alert("ログアウトしました");
-    } else {
-      setFlashMessage({
-        errorMessage: "エラーが発生しました",
-      });
-      // alert("エラーが発生しました");
-    }
+    const path = `${import.meta.env.VITE_API_URL}/logout`;
+    const func = (json) => {
+      console.log(json.result);
+      if (json.result === "success") {
+        // setIsLogin(false);
+        setFlashMessage({
+          message: "ログアウトしました",
+        });
+        // alert("ログアウトしました");
+      } else {
+        setFlashMessage({
+          errorMessage: "エラーが発生しました",
+        });
+        // alert("エラーが発生しました");
+      }
+    };
+    APIAccess(path, func, "POST");
   };
 
   const processor = {};
@@ -418,63 +372,65 @@ export const Todo = () => {
 
   return (
     <>
-      {/* <Router>
-        <Routes>
-          <Route path="/" element={<InputTodo />} />
-          <Route path="/IncompleteTodos" element={<IncompleteTodos />} />
-        </Routes>
-      </Router> */}
       <div className="flashMessage">
         <p style={{ color: "blue" }}>{flashMessage.message}</p>
         <p style={{ color: "red" }}>{flashMessage.errorMessage}</p>
       </div>
-      <Login loginRequest={loginRequest} />
-      <button onClick={logout} disabled={!isLogin}>
-        ログアウト
-      </button>
-      <button onClick={getdata}>getdata</button>
-      <button onClick={screenshot}>スクショ</button>
+      {isLogin == false && <Login loginRequest={loginRequest} />}
+      {/* <div>
+        <button onClick={logout} disabled={!isLogin}>
+          ログアウト
+        </button>
+        <button onClick={getdata}>getdata</button>
+        <button onClick={screenshot}>スクショ</button>
+        <br></br>
+        <button onClick={getIndex}>一覧表示</button>
+        <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>
+          Springのサーバーへ
+        </a>
+      </div> */}
       <br></br>
-      <button onClick={getIndex}>一覧表示</button>
-      <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>Springのサーバーへ</a>
-      <br></br>
-      <div className="menu">
-        <button onClick={onClickNew}>新規作成</button>
-        <button onClick={getIncompleteToDo}>未完了リスト</button>
-        <button onClick={getCompleteToDo}>完了リスト</button>
-        <button onClick={logout}>ログアウト</button>
-      </div>
-      <div className="todos">
-        <InputTodo
-          message={formErrorMessage}
-          inputTodo={inputTodo}
-          onChangeTitle={onChangeTodoTitle}
-          onChangeDetail={onChangeTodoDetail}
-          onClick={onClickAdd}
-          disabled={isMaxLimitIncompleteTodos}
-        />
+      {isLogin == true && (
+        <div>
+          <div className="menu">
+            <button onClick={onClickNew}>新規作成</button>
+            <button onClick={getIncompleteToDo}>未完了リスト</button>
+            <button onClick={getCompleteToDo}>完了リスト</button>
+            <button onClick={logout}>ログアウト</button>
+          </div>
+          <div className="todos">
+            <InputTodo
+              message={formErrorMessage}
+              inputTodo={inputTodo}
+              onChangeTitle={onChangeTodoTitle}
+              onChangeDetail={onChangeTodoDetail}
+              onClick={onClickAdd}
+              disabled={isMaxLimitIncompleteTodos}
+            />
 
-        <TodoDetail
-          Todo={todoDetail}
-          edit={onClickEdit}
-          onClickDelete={onClickDelete}
-        />
-        <IncompleteTodos
-          Todos={incompleteTodos}
-          onClickEdit={onClickEdit}
-          onClickDelete={onClickDelete}
-          onClickComplete={onClickComplete}
-        />
-        <CompleteTodos
-          todos={completeTodos}
-          onClickDelete={onClickDelete}
-          onClickBack={onClickBack}
-          onClickAllDelete={onClickAllDelete}
-          isDeletingCompleteTodos={isDeletingCompleteTodos}
-          deleteFinished={deleteFinished}
-          processer={processor}
-        />
-      </div>
+            <TodoDetail
+              Todo={todoDetail}
+              edit={onClickEdit}
+              onClickDelete={onClickDelete}
+            />
+            <IncompleteTodos
+              Todos={incompleteTodos}
+              onClickEdit={onClickEdit}
+              onClickDelete={onClickDelete}
+              onClickComplete={onClickComplete}
+            />
+            <CompleteTodos
+              todos={completeTodos}
+              onClickDelete={onClickDelete}
+              onClickBack={onClickBack}
+              onClickAllDelete={onClickAllDelete}
+              isDeletingCompleteTodos={isDeletingCompleteTodos}
+              deleteFinished={deleteFinished}
+              processer={processor}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
