@@ -38,10 +38,18 @@ button:hover {
 }
 
 .menu {
-  width: 420px;
+  /* width: 420px; */
   display: flex;
-  justify-content: end;
-  margin: 8px auto;
+  justify-content: center;
+  margin: 8px auto 20px;
+}
+
+.menu-button{
+  width: 135px;
+  font-size: 20px;
+  background-color: #63b4ad;
+  color: #fff;
+  /* font-weight: bold; */
 }
 
 .login-area {

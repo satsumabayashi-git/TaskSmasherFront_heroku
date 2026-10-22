@@ -48,14 +48,13 @@ export const Todo = () => {
     });
 
   useEffect(() => {
-    console.log("getCompleteToDo後に実行");
+    // console.log("getCompleteToDo後に実行");
     screenshot();
   }, [completeTodos]);
 
-  // useEffect(() => {
-  //   getCompleteToDo();
-  //   getIncompleteToDo();
-  // }, []);
+  useEffect(() => {
+    getCompleteToDo() && getIncompleteToDo() && setIsLogin(true);
+  }, []);
 
   const getIndex = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/todos`, {
@@ -165,6 +164,7 @@ export const Todo = () => {
       todo: "",
       detail: "",
     });
+    setTodoDetail({});
   };
 
   const onClickAdd = async () => {
@@ -340,7 +340,7 @@ export const Todo = () => {
 
       setVideoHeight(height);
       animationArea.style.backgroundImage = `url(${imagedata})`;
-      console.log("スクショできた");
+      // console.log("スクショ完了");
     });
   };
 
@@ -356,19 +356,19 @@ export const Todo = () => {
     onClickDelete("all");
   };
 
-  async function getdata() {
-    // Cookie 全体を取得（"key=value; key2=value2" の形式）
-    const cookies = document.cookie;
-    console.log(cookies);
-    console.log(cookies._ctkn);
+  // async function getdata() {
+  //   // Cookie 全体を取得（"key=value; key2=value2" の形式）
+  //   const cookies = document.cookie;
+  //   console.log(cookies);
+  //   console.log(cookies._ctkn);
 
-    var r = document.cookie.split(";");
-    r.forEach(function (value) {
-      //cookie名と値に分ける
-      var content = value.split("=");
-      console.log(content[1]);
-    });
-  }
+  //   var r = document.cookie.split(";");
+  //   r.forEach(function (value) {
+  //     //cookie名と値に分ける
+  //     var content = value.split("=");
+  //     console.log(content[1]);
+  //   });
+  // }
 
   return (
     <>
@@ -393,10 +393,10 @@ export const Todo = () => {
       {isLogin == true && (
         <div>
           <div className="menu">
-            <button onClick={onClickNew}>新規作成</button>
-            <button onClick={getIncompleteToDo}>未完了リスト</button>
-            <button onClick={getCompleteToDo}>完了リスト</button>
-            <button onClick={logout}>ログアウト</button>
+            <button onClick={onClickNew} className="menu-button">新規作成</button>
+            {/* <button onClick={getIncompleteToDo}>未完了リスト</button>
+            <button onClick={getCompleteToDo}>完了リスト</button> */}
+            <button onClick={logout} className="menu-button">ログアウト</button>
           </div>
           <div className="todos">
             <InputTodo
@@ -404,14 +404,16 @@ export const Todo = () => {
               inputTodo={inputTodo}
               onChangeTitle={onChangeTodoTitle}
               onChangeDetail={onChangeTodoDetail}
-              onClick={onClickAdd}
-              disabled={isMaxLimitIncompleteTodos}
+              onClickAdd={onClickAdd}
+              onClickNew={onClickNew}
+              isDisabled={isMaxLimitIncompleteTodos}
             />
 
             <TodoDetail
               Todo={todoDetail}
               edit={onClickEdit}
               onClickDelete={onClickDelete}
+              onClickNew={onClickNew}
             />
             <IncompleteTodos
               Todos={incompleteTodos}

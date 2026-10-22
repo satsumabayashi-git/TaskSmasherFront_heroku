@@ -5,7 +5,7 @@ export const IncompleteTodos = memo((props) => {
   
   return (
     <div className="incomplete-area">
-      <h2 className="title">未完了のTODO</h2>
+      <h2 className="title">未完了リスト</h2>
       <ul>
         {Todos.map((todo) => {
           return (

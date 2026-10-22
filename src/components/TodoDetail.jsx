@@ -1,11 +1,11 @@
 import { memo } from "react";
 
 export const TodoDetail = memo((props) => {
-  const { Todo, Edit, onClickDelete } = props;
-  
+  const { Todo, Edit, onClickDelete, onClickNew } = props;
+
   return (
     <div className="incomplete-area">
-      <h2 className="title">TODO詳細</h2>
+      <h2 className="title">詳細</h2>
       <div>
         <table>
           <tbody>
@@ -41,10 +41,10 @@ export const TodoDetail = memo((props) => {
         >
           編集
         </button>
-        <button>完了</button>
         <button
           onClick={() => {
             onClickDelete(Todo.id);
+            onClickNew();
           }}
         >
           削除

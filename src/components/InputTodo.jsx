@@ -1,5 +1,4 @@
 import { memo } from "react";
-const style = {};
 
 export const InputTodo = memo((props) => {
   const {
@@ -7,13 +6,14 @@ export const InputTodo = memo((props) => {
     inputTodo,
     onChangeTitle,
     onChangeDetail,
-    onClick,
-    disabled,
+    onClickAdd,
+    onClickNew,
+    isDisabled,
   } = props;
-  
+
   return (
     <div className="input-area">
-      <h2>{inputTodo.isNew ? "新規TODO" : "TODO編集"}</h2>
+      <h2 className="title">{inputTodo.isNew ? "新規作成" : "編集"}</h2>
 
       <form id="toDoForm">
         <input type="hidden" name="isNew" value={inputTodo.isNew} />
@@ -42,11 +42,11 @@ export const InputTodo = memo((props) => {
         <span style={{ color: "red" }}>{message.detail}</span>
         <br></br>
       </form>
-      {disabled && <p style={{ color: "red" }}>登録できるのは10個までです!</p>}
-      <button onClick={onClick} disabled={disabled}>
+      {isDisabled && <p style={{ color: "red" }}>登録できるのは10個までです!</p>}
+      <button onClick={onClickAdd} disabled={isDisabled}>
         {inputTodo.isNew ? "追加" : "更新"}
       </button>
-      <button>戻る</button>
+      <button onClick={onClickNew}>戻る</button>
     </div>
   );
 });

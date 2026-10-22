@@ -1,9 +1,5 @@
 import { memo } from "react";
-import animation from "../media/nc274685_爆発CGアニメーション_その５.mp4";
-
-const style = {
-  // display: "none",
-};
+import animation from "../media/爆発アニメーション１.mp4";
 
 export const CompleteTodos = memo((props) => {
   const {
@@ -18,8 +14,8 @@ export const CompleteTodos = memo((props) => {
 
   return (
     <div className="complete-area">
-      <h2 className="title">完了のTODO(ゴミ箱)</h2>
-      {!isDeletingCompleteTodos && <p style={{ color: "red" }}>削除前</p>}
+      <h2 className="title">ゴミ箱</h2>
+      {/* {!isDeletingCompleteTodos && <p style={{ color: "red" }}>削除前</p>} */}
       <div
         id="screenshotArea"
         style={{ display: isDeletingCompleteTodos ? "none" : "block" }}
@@ -54,20 +50,22 @@ export const CompleteTodos = memo((props) => {
       </div>
 
       <div style={{ display: isDeletingCompleteTodos ? "block" : "none" }}>
-        {isDeletingCompleteTodos && <p style={{ color: "red" }}>削除中</p>}
+        {/* {isDeletingCompleteTodos && <p style={{ color: "red" }}>削除中</p>} */}
         <canvas id="processedAnimation"></canvas>
       </div>
       {/* <div>
         {isDeletingCompleteTodos && <p style={{ color: "red" }}>削除中</p>}
         <canvas id="processedAnimation" width="384px"></canvas>
       </div> */}
-      <button
-        disabled={isDeletingCompleteTodos}
-        onClick={() => onClickAllDelete()}
-        className="danger-button"
-      >
-        すべて削除（爆破）
-      </button>
+      {todos.length == 0 || (
+        <button
+          disabled={isDeletingCompleteTodos}
+          onClick={() => onClickAllDelete()}
+          className="danger-button"
+        >
+          すべて削除
+        </button>
+      )}
 
       <video
         id="deleteAnimation"
