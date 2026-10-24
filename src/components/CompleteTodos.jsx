@@ -14,7 +14,7 @@ export const CompleteTodos = memo((props) => {
 
   return (
     <div className="complete-area">
-      <h2 className="title">ゴミ箱</h2>
+      <h2 className="title">完了済み</h2>
       {/* {!isDeletingCompleteTodos && <p style={{ color: "red" }}>削除前</p>} */}
       <div
         id="screenshotArea"
