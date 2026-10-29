@@ -94,6 +94,7 @@ export const Todo = () => {
         func(json);
       } catch (jsonErr) {
         console.log(jsonErr);
+        alert(jsonErr);
         setIsLogin(false);
         setFlashMessage({
           errorMessage: "ログインしてください。",
