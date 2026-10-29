@@ -69,26 +69,19 @@ export const Todo = () => {
   };
 
   const APIAccess = async (path, func, method = "GET", form) => {
-    const cookies = cookie.parse(document.cookie);
-    const csrf = cookies._ctkn;
-    const headers = {};
-    if (csrf) {
-      headers["X-CSRF-TOKEN"] = csrf;
-    }
+    // const cookies = cookie.parse(document.cookie);
+    // const csrf = cookies._ctkn;
     const options = {
       method: method,
       credentials: "include",
       cache: "default",
       redirect: "follow",
-      headers: {
-        "X-CSRF-TOKEN": csrf,
-      },
+      // headers: {
+      //   "X-CSRF-TOKEN": csrf,
+      // },
     };
     method == "POST" && (options.body = form);
     try {
-      alert(path);
-      alert(csrf);
-      alert(options);
       const res = await fetch(path, options);
       if (res.fobidden) {
         setFlashMessage({
