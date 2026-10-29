@@ -92,6 +92,8 @@ export const Todo = () => {
       }
       try {
         alert(res);
+        const text = await res.text();
+        alert(text);
         const json = await res.json();
         alert(json);
         func(json);
