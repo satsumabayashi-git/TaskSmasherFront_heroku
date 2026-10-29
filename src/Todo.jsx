@@ -81,6 +81,7 @@ export const Todo = () => {
       // },
     };
     method == "POST" && (options.body = form);
+    alert(path);
     try {
       const res = await fetch(path, options);
       if (res.fobidden) {
