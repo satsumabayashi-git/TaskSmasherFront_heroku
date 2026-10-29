@@ -81,7 +81,7 @@ export const Todo = () => {
       // },
     };
     method == "POST" && (options.body = form);
-    alert(path);
+    // alert(path);
     try {
       const res = await fetch(path, options);
       if (res.fobidden) {
@@ -91,7 +91,9 @@ export const Todo = () => {
         return;
       }
       try {
+        alert(res);
         const json = await res.json();
+        alert(json);
         func(json);
       } catch (jsonErr) {
         console.log(jsonErr);
