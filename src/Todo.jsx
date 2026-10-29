@@ -265,7 +265,7 @@ export const Todo = () => {
         setFlashMessage({
           message: "ログインしました。",
         });
-        // alert("ログインしました");
+        alert("ログインしました");
         // getIndex();
         getIncompleteToDo();
         // getCompleteToDo();
