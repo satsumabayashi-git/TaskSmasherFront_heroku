@@ -91,11 +91,11 @@ export const Todo = () => {
         return;
       }
       try {
-        alert(res);
-        const text = await res.text();
-        alert(text);
+        // alert(res);
+        // const text = await res.text();
+        // alert(text);
         const json = await res.json();
-        alert(json);
+        // alert(json);
         func(json);
       } catch (jsonErr) {
         console.log(jsonErr);
@@ -376,6 +376,20 @@ export const Todo = () => {
   //   });
   // }
 
+  const getdata = async () => {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/todos/incomplete`, {
+      credentials: "include",
+      cache: "default",
+      redirect: "follow",
+    });
+    // const todos = await res.json();
+    const todos = await res.text();
+    alert(todos);
+    console.log(todos);
+    // setIncompleteTodos(todos);
+    return todos;
+  };
+
   return (
     <>
       <div className="flashMessage">
@@ -383,7 +397,7 @@ export const Todo = () => {
         <p style={{ color: "red" }}>{flashMessage.errorMessage}</p>
       </div>
       {isLogin == false && <Login loginRequest={loginRequest} />}
-      {/* <div>
+      <div>
         <button onClick={logout} disabled={!isLogin}>
           ログアウト
         </button>
@@ -394,7 +408,7 @@ export const Todo = () => {
         <a href={`${import.meta.env.VITE_API_URL}/todos/1`}>
           Springのサーバーへ
         </a>
-      </div> */}
+      </div>
       <br></br>
       {isLogin == true && (
         <div>
