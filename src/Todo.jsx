@@ -71,6 +71,10 @@ export const Todo = () => {
   const APIAccess = async (path, func, method = "GET", form) => {
     const cookies = cookie.parse(document.cookie);
     const csrf = cookies._ctkn;
+    const headers = {};
+    if (csrf) {
+      headers["X-CSRF-TOKEN"] = csrf;
+    }
     const options = {
       method: method,
       credentials: "include",
@@ -82,6 +86,9 @@ export const Todo = () => {
     };
     method == "POST" && (options.body = form);
     try {
+      alert("path =", path);
+      alert("csrf =", csrf);
+      alert("options =", options);
       const res = await fetch(path, options);
       if (res.fobidden) {
         setFlashMessage({
@@ -394,10 +401,14 @@ export const Todo = () => {
       {isLogin == true && (
         <div>
           <div className="menu">
-            <button onClick={onClickNew} className="menu-button">新規作成</button>
+            <button onClick={onClickNew} className="menu-button">
+              新規作成
+            </button>
             {/* <button onClick={getIncompleteToDo}>未完了リスト</button>
             <button onClick={getCompleteToDo}>完了リスト</button> */}
-            <button onClick={logout} className="menu-button">ログアウト</button>
+            <button onClick={logout} className="menu-button">
+              ログアウト
+            </button>
           </div>
           <div className="todos">
             <InputTodo
