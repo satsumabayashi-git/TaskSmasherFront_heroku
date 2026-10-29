@@ -86,9 +86,9 @@ export const Todo = () => {
     };
     method == "POST" && (options.body = form);
     try {
-      alert("path =", path);
-      alert("csrf =", csrf);
-      alert("options =", options);
+      alert(path);
+      alert(csrf);
+      alert(options);
       const res = await fetch(path, options);
       if (res.fobidden) {
         setFlashMessage({
