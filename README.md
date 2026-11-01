@@ -1,16 +1,29 @@
-# React + Vite
+# TaskSmasher
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## アプリケーション概要
+完了したタスクをまとめて削除できる、シンプルなタスク管理アプリケーション（フロントエンド）
 
-Currently, two official plugins are available:
+## 製作経緯
+市販の参考書とUdemyの講座でReactを学習して開発した、SPAのフロントエンドとなるReactアプリケーションです。
+最初にReact単体で動くアプリケーションとして作成した後、バックエンドを開発し、このアプリケーションをフロントエンドとして結合テストを行いました。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 反省点と今後の課題
+- 動作環境となるDockerとHerokuの学習に時間を取られたため、開発期間が想定より遅れた。
+- 完成後にiPhoneでは正常に動作しないことが発覚した。セッションのCookie認証がSafariのサードパーティCookie制限に引っかかっていることが原因とみられるため、JWT認証に移行する予定。
+- 変更点が大きくなるが、当初予定していたreact-routerによるルーティングを実装したい。
+​
+## 実装した機能
+- ログイン
+- タスクの作成・編集・削除
+- 完了・未完了の管理
+- 完了済みタスク削除時のアニメーション再生
+​
+## 開発環境
+- OS： Windows
+- 環境： Docker
+- 言語： HTML, CSS, JavaScript
+- データベース: MYSQL
+- フレームワーク： React
+- インフラ： Heroku
+- IDE： VSCode
+- その他： ESLint, Prettier, Git, GitHub
